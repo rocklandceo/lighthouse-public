@@ -1,0 +1,19 @@
+# Forbidden patterns for public release validation
+# Each line is a case-insensitive regex pattern
+# Empty lines and lines starting with # are ignored
+
+# Company identifiers
+caseclock
+rockland
+@rockland\.cc
+@caseclock\.ai
+lighthouse\.caseclock\.ai
+caseclock\.ai
+
+# Common secret patterns (more specific to avoid false positives on docs)
+BEGIN .* PRIVATE KEY
+ghp_[A-Za-z0-9]{36,}
+GOCSPX-[A-Za-z0-9_-]{28,}
+sk-ant-[A-Za-z0-9_-]{50,}
+AKIA[A-Z0-9]{16}
+Authorization:\s*Bearer\s+(?!your|example)[A-Za-z0-9_-]{20,}

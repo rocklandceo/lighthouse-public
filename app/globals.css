@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Colors (can be overridden via CSS custom properties on html element) */
+  --brand-primary: #0B3D91;
+  --brand-accent: #B45309;
+  --brand-background: #FAF7F2;
+  --brand-text: #0B3D91;
+
+  /* Color palette (defaults wired to brand vars) */
+  --navy-950: #0F172A;
+  --navy-900: #1E293B;
+  --navy-800: #0B3D91;
+  --navy-700: #1E40AF;
+  --navy-600: #2563EB;
+
+  --bronze-700: #92400E;
+  --bronze-600: #B45309;
+  --bronze-500: #D97706;
+  --bronze-400: #F59E0B;
+  --bronze-300: #FCD34D;
+
+  --warm-50: #FAF7F2;
+  --warm-100: #F5EFE7;
+  --warm-200: #E8DFD3;
+  --warm-300: #D4C4B0;
+
+  /* Theme colors (wired to brand vars for easy customization) */
+  --background: var(--brand-background);
+  --foreground: var(--brand-text);
+  --background-card: #ffffff;
+  --border-color: var(--warm-200);
+  --accent: var(--bronze-600);
+  --accent-light: var(--bronze-400);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Color palette */
+  --color-navy-950: var(--navy-950);
+  --color-navy-900: var(--navy-900);
+  --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+  --color-navy-600: var(--navy-600);
+
+  --color-bronze-700: var(--bronze-700);
+  --color-bronze-600: var(--bronze-600);
+  --color-bronze-500: var(--bronze-500);
+  --color-bronze-400: var(--bronze-400);
+  --color-bronze-300: var(--bronze-300);
+
+  --color-warm-50: var(--warm-50);
+  --color-warm-100: var(--warm-100);
+  --color-warm-200: var(--warm-200);
+  --color-warm-300: var(--warm-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--navy-950);
+    --foreground: #ededed;
+    --background-card: var(--navy-900);
+    --border-color: #334155;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--warm-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--warm-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bronze-400);
+}
+
+/* Gradient utility classes */
+.gradient-navy {
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-700) 100%);
+}
+
+.gradient-bronze {
+  background: linear-gradient(135deg, var(--bronze-600) 0%, var(--bronze-500) 100%);
+}
+
+.gradient-warm {
+  background: linear-gradient(135deg, var(--warm-50) 0%, var(--warm-100) 50%, var(--warm-200) 100%);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(11, 61, 145, 0.1), 0 4px 10px -5px rgba(11, 61, 145, 0.05);
+}

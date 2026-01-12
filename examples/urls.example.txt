@@ -1,0 +1,10 @@
+https://example.com/
+https://example.com/about
+https://example.com/products
+https://example.com/services
+https://example.com/contact
+https://example.com/blog
+https://example.com/privacy-policy
+https://example.com/terms-of-service
+https://example.com/faq
+https://example.com/support

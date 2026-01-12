@@ -1,0 +1,95 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env
+.env.*
+!.env.example
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# ===========================================
+# Project-specific exclusions
+# ===========================================
+
+# AI Assistant Tooling (never commit)
+CLAUDE.md
+.claude/
+.cursor/
+.windsurf/
+.aider*/
+.continue/
+.copilot/
+
+# Generated Lighthouse reports (created by CI)
+public/reports/
+public/reports/**
+
+# Lighthouse/Unlighthouse generated artifacts (redundant safety)
+__screenshot-thumbnails__/
+**/lighthouse.html
+**/lighthouse.json
+**/ci-result.json
+
+# Unlighthouse working directories and configs
+.unlighthouse/
+.unlighthouse-*/
+unlighthouse.config.mjs
+unlighthouse.*.config.mjs
+
+.taskmaster/
+
+# Test files and temporary data
+test-*.txt
+urls.txt
+regression-report.json
+
+# Browser automation screenshots
+.playwright-mcp/
+
+# IDE / Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
