@@ -65,7 +65,6 @@ const REQUIRED_FILES = [
   'README.md',
   'LICENSE',
   'CONTRIBUTING.md',
-  'CLAUDE.md',
   '.env.example',
   'docs/SETUP.md',
   'docs/PUBLIC-RELEASE.md',
