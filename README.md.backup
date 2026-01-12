@@ -8,121 +8,42 @@ Monitor your website's performance, accessibility, and SEO scores with automated
 
 ---
 
-## Before You Begin
+## 2-Minute Quick Start
 
-### Required Accounts
+Get your dashboard running in three steps:
 
-You'll need accounts with these services before deploying:
+### Step 1: Deploy to Vercel
 
-- **[Vercel](https://vercel.com)** (required) - Free hosting and KV storage
-- **[Google Cloud](https://console.cloud.google.com)** (required) - OAuth authentication
-- **[DataForSEO](https://dataforseo.com)** (required for competitor analysis) - Paid API service
+Click the **Deploy with Vercel** button above, or:
 
-### Optional Integrations
+1. Fork this repository
+2. Go to [vercel.com](https://vercel.com) → **Add New Project**
+3. Import your forked repository
 
-- **[Anthropic](https://console.anthropic.com)** - AI-powered SEO insights ($5-10/month typical)
-- **Google Analytics** - Traffic metrics integration
-- **Google Search Console** - Keyword tracking
-- **Slack** - Score drop notifications
+### Step 2: Add Storage
 
-> **Note**: Without DataForSEO, you won't have competitor analysis or content gap features. The dashboard will still work for Lighthouse performance monitoring.
+1. In your Vercel project, go to **Storage** tab
+2. Click **Create Database** → **KV**
+3. Name it anything (e.g., "lighthouse-kv") and click **Create**
 
----
-
-## Quick Start Guide
-
-### Step 1: Fork This Repository
-
-1. Click the **Fork** button at the top right of this page
-2. This creates your own copy at `https://github.com/YOUR-USERNAME/lighthouse-public`
-
-### Step 2: Deploy to Vercel
-
-**Option A - Deploy Button** (Easiest):
-1. Click the **Deploy with Vercel** button at the top of this page
-2. Sign in to Vercel
-3. Select your forked repository
-4. Click **Deploy** (we'll add config later)
-
-**Option B - Manual Deploy**:
-1. Go to [vercel.com/new](https://vercel.com/new)
-2. Import your forked repository
-3. Click **Deploy** (we'll add config later)
-
-### Step 3: Add Vercel KV Storage
-
-1. In your Vercel project dashboard, go to the **Storage** tab
-2. Click **Create Database** → Select **KV**
-3. Name it `lighthouse-kv` (or anything you prefer)
-4. Click **Create**
-5. Vercel automatically adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` to your environment variables
-
-### Step 4: Configure Google OAuth
-
-**Create OAuth Credentials**:
+### Step 3: Configure Authentication
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
-2. Create a new project (or select existing)
-3. Go to **APIs & Services** → **Credentials**
-4. Click **Create Credentials** → **OAuth 2.0 Client ID**
-5. Configure consent screen if prompted (use "External" for personal use)
-6. Choose **Web application** as application type
-7. Add **Authorized JavaScript origins**:
-   - `https://your-project-name.vercel.app` (your actual Vercel URL)
-8. Add **Authorized redirect URIs**:
-   - `https://your-project-name.vercel.app/api/auth/callback/google`
-9. Click **Create** and copy your Client ID and Client Secret
+2. Create an **OAuth 2.0 Client ID** (Web application)
+3. Add redirect URI: `https://YOUR-PROJECT.vercel.app/api/auth/callback/google`
+4. In Vercel, add these environment variables:
 
-**Add to Vercel**:
+| Variable | Value |
+|----------|-------|
+| `TARGET_BASE_URL` | Your website URL (e.g., `https://example.com`) |
+| `DASHBOARD_URL` | Your Vercel URL (e.g., `https://your-project.vercel.app`) |
+| `NEXTAUTH_SECRET` | Run `openssl rand -base64 32` to generate |
+| `GOOGLE_CLIENT_ID` | From Google Cloud Console |
+| `GOOGLE_CLIENT_SECRET` | From Google Cloud Console |
 
-1. In your Vercel project, go to **Settings** → **Environment Variables**
-2. Add these variables:
+5. Click **Deploy**
 
-| Variable | Value | Where to Find It |
-|----------|-------|------------------|
-| `TARGET_BASE_URL` | `https://your-website.com` | The site you want to monitor |
-| `DASHBOARD_URL` | `https://your-project.vercel.app` | Your Vercel deployment URL |
-| `NEXTAUTH_SECRET` | Generate with `openssl rand -base64 32` | Run in terminal |
-| `GOOGLE_CLIENT_ID` | `xxx.apps.googleusercontent.com` | From Google Cloud Console |
-| `GOOGLE_CLIENT_SECRET` | `GOCSPX-xxx...` | From Google Cloud Console |
-
-3. Click **Save**
-
-### Step 5: Redeploy
-
-1. Go to **Deployments** tab in Vercel
-2. Click **...** on the latest deployment → **Redeploy**
-3. Your dashboard will now have all required environment variables
-
-### Step 6: Verify Deployment
-
-1. Visit your dashboard URL (`https://your-project.vercel.app`)
-2. You should see a Google sign-in page
-3. Sign in with your Google account
-4. You'll see the dashboard (it will say "No data available" until first scan)
-
-### Step 7: Run Your First Scan
-
-**Configure GitHub Actions**:
-
-1. In your forked repository, go to **Settings** → **Secrets and variables** → **Actions**
-2. Add these repository secrets:
-
-| Secret | Value | Purpose |
-|--------|-------|---------|
-| `DASHBOARD_URL` | Your Vercel URL | Where to upload results |
-| `CI_UPLOAD_SIGNING_KEY` | Generate with `openssl rand -hex 32` | Secure uploads |
-| `TARGET_BASE_URL` | Your website URL | Site to scan |
-
-**Important**: The `CI_UPLOAD_SIGNING_KEY` must be added to **both** GitHub Secrets AND Vercel environment variables (with the same value).
-
-**Run the Workflow**:
-
-1. Go to **Actions** tab in your repository
-2. Click **Unlighthouse CI** workflow
-3. Click **Run workflow** → **Run workflow**
-4. Wait 5-10 minutes for completion
-5. Refresh your dashboard - you should now see data!
+Your first scan will run automatically the next morning at 2 AM UTC, or you can trigger one manually from GitHub Actions.
 
 ### First Run Checklist
 
@@ -269,42 +190,20 @@ Get intelligent SEO recommendations, content suggestions, and quick wins.
 1. Get an API key from [console.anthropic.com](https://console.anthropic.com/)
 2. Add `ANTHROPIC_API_KEY` to Vercel environment variables
 
-### Competitor Analysis (DataForSEO) - REQUIRED for Full Features
+### Competitor Analysis (DataForSEO)
 
-**What You Get**:
-- SERP position tracking for your competitors
-- Keyword suggestions and research
-- Content gap analysis (keywords competitors rank for that you don't)
-- Organic search traffic estimates
+Track competitor rankings and identify content gaps.
 
-**Without DataForSEO**: The dashboard still works for performance monitoring, but competitor and content gap features will be disabled.
+1. Create account at [dataforseo.com](https://dataforseo.com/)
+2. Go to your **Dashboard** → **API Access** section
+3. Generate or copy your **API Login** and **API Password**
 
-**Setup Instructions**:
+   > **Important**: These are your *API credentials*, not your account login credentials.
+   > The API Login is typically your email, and the API Password is a separate key generated in the API Access section.
 
-1. **Create account** at [dataforseo.com](https://dataforseo.com/)
-   - Sign up for an account (paid service, ~$40/month for basic usage)
-   - Add funds to your account ($10 minimum)
-
-2. **Get API credentials**:
-   - Log in to DataForSEO dashboard
-   - Go to **API Access** section (left sidebar)
-   - You'll see your **API Login** (usually your email)
-   - Click **Show** next to **API Password** to reveal it
-   - **Important**: This is NOT your account password - it's a separate API key
-
-3. **Add to Vercel**:
-   - In Vercel project → **Settings** → **Environment Variables**
-   - Add `DATAFORSEO_LOGIN` = your email from API Access page
-   - Add `DATAFORSEO_PASSWORD` = the API password (starts with random characters)
-   - Click **Save** and **Redeploy**
-
-4. **Verify it works**:
-   - After redeploy, sign in to your dashboard
-   - Go to the **Competitors** tab
-   - Click **Configure** and add a competitor domain
-   - Click **Refresh Data**
-   - If successful, you'll see competitor metrics populate
-   - If you see errors, check Vercel function logs for API error messages
+4. Add these environment variables in Vercel:
+   - `DATAFORSEO_LOGIN` = Your API Login (from API Access section)
+   - `DATAFORSEO_PASSWORD` = Your API Password (from API Access section)
 
 ### Google Analytics
 
@@ -325,100 +224,61 @@ Get alerts when scores drop or thresholds are breached.
 
 ## Local Development
 
-### Prerequisites
-
-- Node.js 18+ (20 recommended)
-- A code editor (VS Code recommended)
-- Terminal access
-
-### Setup Steps
-
-1. **Clone your forked repository**:
-
 ```bash
-git clone https://github.com/YOUR-USERNAME/lighthouse-public.git
-cd lighthouse-public
-```
-
-2. **Install dependencies**:
-
-```bash
+# Clone and install
+git clone https://github.com/YOUR_USERNAME/lighthouse-seo-dashboard.git
+cd lighthouse-seo-dashboard
 npm ci
-```
 
-3. **Copy environment template**:
-
-```bash
+# Configure environment
 cp .env.example .env.local
-```
+# Edit .env.local with your values
 
-4. **Get Vercel KV credentials** (from your deployed Vercel project):
-   - Go to your Vercel project dashboard
-   - Click **Storage** tab → Click your KV database
-   - Go to **.env.local** tab
-   - Copy `KV_REST_API_URL` and `KV_REST_API_TOKEN`
-   - Paste them into your `.env.local` file
-
-5. **Configure OAuth for localhost**:
-   - In Google Cloud Console, edit your OAuth client
-   - Add to **Authorized JavaScript origins**: `http://localhost:3000`
-   - Add to **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
-
-6. **Edit `.env.local`** with required values:
-
-```bash
-# Required
-TARGET_BASE_URL=https://your-site.com
-DASHBOARD_URL=http://localhost:3000
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-from-vercel
-GOOGLE_CLIENT_ID=your-client-id
-GOOGLE_CLIENT_SECRET=your-client-secret
-KV_REST_API_URL=your-kv-url
-KV_REST_API_TOKEN=your-kv-token
-
-# Optional (for full local testing)
-ANTHROPIC_API_KEY=sk-ant-...
-DATAFORSEO_LOGIN=your-login
-DATAFORSEO_PASSWORD=your-password
-```
-
-7. **Start development server**:
-
-```bash
+# Start development server
 npm run dev
+
+# Run tests
+npm test
+
+# Run type checking
+npm run typecheck
+
+# Run linting
+npm run lint
+
+# Build for production
+npm run build
+
+# Run full verification (typecheck + lint + test + build)
+npm run verify
+
+# Run Lighthouse scans locally
+npm run scan:desktop
+npm run scan:mobile
 ```
 
-8. **Open browser** to [http://localhost:3000](http://localhost:3000)
+### Local-Only Files
+
+**Important**: Never commit environment files or local configuration to version control.
+
+- `.env`, `.env.local`, `.env.*.local` - Contains secrets and credentials
+- `.claude/`, `.taskmaster/` - Local AI assistant tooling
+- `public/reports/` - Generated Lighthouse reports
+
+These files are gitignored. Always use `.env.example` as your template when setting up locally.
 
 ### Available Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server on port 3000 |
+| `npm run dev` | Start development server |
 | `npm run build` | Build for production |
-| `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
-| `npm run typecheck` | Run TypeScript type checking |
+| `npm run typecheck` | Run TypeScript checks |
 | `npm test` | Run test suite |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run verify` | Run full verification (typecheck + lint + test + build) |
-| `npm run scan:desktop` | Run Lighthouse scan (desktop) |
-| `npm run scan:mobile` | Run Lighthouse scan (mobile) |
-| `npm run urls` | Extract URLs from sitemap |
-
-### Local-Only Files (Never Commit)
-
-The following files are gitignored and contain secrets - **never commit these**:
-
-- `.env.local` - Your local environment variables
-- `.env` - Alternative env file
-- `.env.*.local` - Environment-specific configs
-- `public/reports/` - Generated Lighthouse HTML reports
-- `.unlighthouse/` - Lighthouse scan cache
-- `ci-result.json` - Scan results JSON
-
-Always use `.env.example` as your template.
+| `npm run verify` | Run full verification (typecheck + lint + test + build + public-ready check) |
+| `npm run scan:desktop` | Run desktop Lighthouse scan |
+| `npm run scan:mobile` | Run mobile Lighthouse scan |
 
 ---
 
@@ -595,8 +455,5 @@ Built with these excellent open source projects:
 
 ## Support
 
-- **Documentation**: See [docs/SETUP.md](docs/SETUP.md) for detailed setup guides
-- **Issues**: Report bugs at [github.com/rocklandceo/lighthouse-public/issues](https://github.com/rocklandceo/lighthouse-public/issues)
-- **Discussions**: Ask questions at [github.com/rocklandceo/lighthouse-public/discussions](https://github.com/rocklandceo/lighthouse-public/discussions)
-
-> **Note**: If you forked this repository, you can also use your fork's Issues tab for personal tracking.
+- **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/lighthouse-seo-dashboard/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/YOUR_USERNAME/lighthouse-seo-dashboard/discussions)
