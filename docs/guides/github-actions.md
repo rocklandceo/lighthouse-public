@@ -68,35 +68,56 @@ In addition to `CI_UPLOAD_SIGNING_KEY`, add these required secrets:
 
 ### DASHBOARD_URL (Required)
 
-- Name: `DASHBOARD_URL`
-- Value: Your Vercel URL (e.g., `https://my-dashboard.vercel.app`)
-- **Important**: No trailing slash
+1. Go to your GitHub repository
+2. Click **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Name: `DASHBOARD_URL`
+5. Value: Your Vercel URL (e.g., `https://my-dashboard.vercel.app`)
+   - **Important**: No trailing slash
+   - This is the same URL where you access your deployed dashboard
+6. Click **Add secret**
 
 ### TARGET_BASE_URL (Required)
 
-- Name: `TARGET_BASE_URL`
-- Value: `https://your-website.com` (the site you're monitoring)
-- **Important**: No trailing slash
+1. Click **New repository secret** again
+2. Name: `TARGET_BASE_URL`
+3. Value: `https://your-website.com` (the site you're monitoring)
+   - **Important**: No trailing slash
+   - This must be a publicly accessible URL
+   - Example: `https://example.com`
+4. Click **Add secret**
+
+**⚠️ Important**: `TARGET_BASE_URL` must also be set in Vercel environment variables with the **exact same value**. This is required for the dashboard to work correctly.
 
 ### SITEMAP_URL (Optional)
 
-- Name: `SITEMAP_URL`
-- Value: `https://your-website.com/sitemap.xml` (custom sitemap location)
-- **Default**: If not set, defaults to `${TARGET_BASE_URL}/sitemap.xml`
-- Only needed if your sitemap is at a non-standard location
+Only add this if your sitemap is NOT at the standard location (`/sitemap.xml`):
+
+1. Click **New repository secret**
+2. Name: `SITEMAP_URL`
+3. Value: Full URL to your sitemap (e.g., `https://your-website.com/sitemap_index.xml`)
+4. Click **Add secret**
+
+**Default behavior**: If `SITEMAP_URL` is not set, the workflow will look for `${TARGET_BASE_URL}/sitemap.xml`
+
+---
 
 **Summary of GitHub Secrets**:
 
-| Secret | Required | Example | Notes |
-|--------|----------|---------|-------|
-| `DASHBOARD_URL` | ✅ Yes | `https://my-dashboard.vercel.app` | Where to upload scan results |
-| `CI_UPLOAD_SIGNING_KEY` | ✅ Yes | `a1b2c3d4e5...` (64 chars) | HMAC signing key - **Must match Vercel env var** |
-| `TARGET_BASE_URL` | ✅ Yes | `https://example.com` | Website you're monitoring |
-| `SITEMAP_URL` | ⚪ Optional | `https://example.com/sitemap_index.xml` | Defaults to `${TARGET_BASE_URL}/sitemap.xml` |
+| Secret | Required | Example | Where Else to Set |
+|--------|----------|---------|-------------------|
+| `DASHBOARD_URL` | ✅ Yes | `https://my-dashboard.vercel.app` | Nowhere else |
+| `CI_UPLOAD_SIGNING_KEY` | ✅ Yes | `a1b2c3d4e5...` (64 chars) | **Vercel env vars** (must match!) |
+| `TARGET_BASE_URL` | ✅ Yes | `https://example.com` | **Vercel env vars** (must match!) |
+| `SITEMAP_URL` | ⚪ Optional | `https://example.com/sitemap_index.xml` | Nowhere else |
 
-**Note**: These are **GitHub repository secrets** used by the CI workflow. They are separate from Vercel environment variables (except `CI_UPLOAD_SIGNING_KEY` and `TARGET_BASE_URL` which must be set in both locations with identical values).
+**Critical**: `CI_UPLOAD_SIGNING_KEY` and `TARGET_BASE_URL` must be set in **TWO** places with identical values:
+1. GitHub repository secrets (for the CI workflow)
+2. Vercel environment variables (for the dashboard app)
 
-## Step 2: Enable the Workflow
+---
+
+## Step 3: Enable the Workflow
 
 The workflow file is already included at `.github/workflows/unlighthouse.yml`.
 

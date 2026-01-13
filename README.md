@@ -14,19 +14,19 @@ Monitor your website's performance, accessibility, and SEO scores with automated
 
 You'll need accounts with these services before deploying:
 
-- **[GitHub](https://github.com)** (required) - Fork this repo and run GitHub Actions for automated scans
-- **[Vercel](https://vercel.com)** (required) - Free hosting and KV storage
-- **[Google Cloud](https://console.cloud.google.com)** (required) - OAuth authentication
-- **[DataForSEO](https://dataforseo.com)** (required for full features) - Paid API service for competitor analysis
+- **[GitHub](https://github.com)** - Fork this repo and run GitHub Actions for automated scans
+- **[Vercel](https://vercel.com)** - Free hosting and KV storage
+- **[Google Cloud](https://console.cloud.google.com)** - OAuth authentication
 
 ### Optional Integrations
 
-- **[Anthropic](https://console.anthropic.com)** - AI-powered SEO insights ($5-10/month typical)
+- **[DataForSEO](https://dataforseo.com)** - Competitor analysis and content gaps (~$40/month) - See [docs/guides/dataforseo.md](docs/guides/dataforseo.md)
+- **[Anthropic](https://console.anthropic.com)** - AI-powered SEO insights (~$5-10/month)
 - **Google Analytics** - Traffic metrics integration
 - **Google Search Console** - Keyword tracking
 - **Slack** - Score drop notifications
 
-> **Note**: Without DataForSEO, you won't have competitor analysis or content gap features. The dashboard will still work for Lighthouse performance monitoring. See [docs/guides/dataforseo.md](docs/guides/dataforseo.md) for setup instructions.
+> **Note**: The dashboard works perfectly for Lighthouse performance monitoring without any optional integrations. DataForSEO enables competitor tracking, Anthropic enables AI insights, and the others add supplementary metrics.
 
 ---
 
@@ -115,26 +115,26 @@ See [docs/guides/google-oauth.md](docs/guides/google-oauth.md) for detailed inst
 **⚠️ Important: This step is critical for automated daily scans**
 
 1. In your forked repository, go to **Settings** → **Secrets and variables** → **Actions**
-2. Add these repository secrets:
+2. Click **New repository secret** for each of these:
 
 | Secret | Value | Purpose |
 |--------|-------|---------|
+| `TARGET_BASE_URL` | The site you're monitoring (e.g., `https://example.com`) | Website to scan - **MUST also be in Vercel env vars** |
 | `DASHBOARD_URL` | Your Vercel URL (e.g., `https://my-dashboard.vercel.app`) | Where to upload results |
-| `TARGET_BASE_URL` | The site you're monitoring (e.g., `https://example.com`) | **Required** - Website to scan |
 | `CI_UPLOAD_SIGNING_KEY` | Generate with `openssl rand -hex 32` | Secure uploads - **MUST match Vercel env var** |
 
 **Important Distinction:**
 
 - **GitHub Secrets** (above): Used by GitHub Actions CI workflow to run scans and upload results
-- **Vercel Environment Variables**: Used by the deployed dashboard application (set in Step 5)
-- Only `CI_UPLOAD_SIGNING_KEY` and `TARGET_BASE_URL` need to be set in BOTH locations
+- **Vercel Environment Variables**: Used by the deployed dashboard application (set in Step 4)
+- `TARGET_BASE_URL` and `CI_UPLOAD_SIGNING_KEY` must be set in BOTH locations with identical values
 
-3. **Critical**: Add `CI_UPLOAD_SIGNING_KEY` to **both**:
-   - GitHub repository secrets (as shown above)
-   - Vercel environment variables (Settings → Environment Variables)
-   - **Both values must be identical**
+3. **Critical**: Also add these to Vercel environment variables (Settings → Environment Variables):
+   - `TARGET_BASE_URL` - Same value as GitHub secret
+   - `CI_UPLOAD_SIGNING_KEY` - Same value as GitHub secret
+   - **Both values must be absolutely identical in both locations**
 
-4. **Optional**: Add `SITEMAP_URL` if your sitemap is at a non-standard location (defaults to `${TARGET_BASE_URL}/sitemap.xml`)
+4. **Optional**: Add `SITEMAP_URL` to GitHub secrets if your sitemap is at a non-standard location (defaults to `${TARGET_BASE_URL}/sitemap.xml`)
 
 See [docs/guides/github-actions.md](docs/guides/github-actions.md) for detailed instructions.
 
