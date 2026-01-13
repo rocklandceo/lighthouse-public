@@ -1,5 +1,20 @@
 # Google Analytics & Search Console Setup Guide
 
+## When to Use This Guide
+
+**From the main README**: You're here from Step 10 of the main setup guide.
+
+**Purpose**: This guide provides detailed walkthrough for Google Analytics 4 and Search Console setup, including account creation. The README has a quick summary - this guide has the full details.
+
+**Prerequisites**:
+- ✅ You've completed Steps 1-2 of the README (forked repo, created .env file)
+- ✅ Your `.env` file is open in your editor
+- ✅ You've completed Step 9 (Google OAuth) - same Google account needed
+
+**After completing this guide**: Return to the README and continue with Step 11.
+
+---
+
 This guide walks you through setting up Google Analytics 4 (GA4) and Google Search Console for your Lighthouse SEO Dashboard, starting from account creation.
 
 **Estimated Time**: 30-40 minutes

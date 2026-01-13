@@ -1,370 +1,306 @@
-# Setup Credentials Tracker
+# Setup Progress Tracker
 
-Use this document to track your progress through the setup process. Check off each item as you complete it.
+**Purpose**: Track your progress through the [main setup guide](../README.md). Each section below corresponds to a step in the README.
 
-**Estimated Total Time**: 2 hours
-**Estimated Total Cost**: $50 one-time + ~$5/month
-
----
-
-## Phase 1: Account Creation (~30 minutes)
-
-Track which accounts you've created:
-
-| Service | Account Created? | Login Email | Notes |
-|---------|-----------------|-------------|-------|
-| GitHub | ☐ | | For repository and CI/CD |
-| Google Cloud | ☐ | | For OAuth + APIs |
-| Anthropic | ☐ | | For AI insights (~$5/month) |
-| DataForSEO | ☐ | | For competitor analysis ($50 minimum) |
-| Vercel | ☐ | | For hosting (free) |
-| Google Analytics 4 | ☐ | | For traffic metrics (free, may already have) |
-
-**✅ Checkpoint**: All 6 accounts created
+**How to Use**:
+1. Keep this file open alongside the README
+2. Check off items as you complete them
+3. Use the .env tracking to verify credentials are added
+4. Reference the troubleshooting tips if you get stuck
 
 ---
 
-## Phase 2: Generate Secrets (~5 minutes)
+## Prerequisites Checklist
 
-**Run Command:**
-```bash
-# Mac/Linux
-bash scripts/generate-secrets.sh
-
-# Windows PowerShell
-powershell -ExecutionPolicy Bypass -File scripts/generate-secrets.ps1
-```
-
-**Generated Values:**
-
-| Secret | Generated? | Value Saved? | Notes |
-|--------|------------|--------------|-------|
-| NEXTAUTH_SECRET | ☐ | ☐ | Base64, 32 bytes |
-| CI_UPLOAD_SIGNING_KEY | ☐ | ☐ | Hex, 32 bytes (⚠️ Two-location) |
-
-**⚠️ CRITICAL**: Save these values securely. You'll need them multiple times.
-
-**✅ Checkpoint**: Both secrets generated and saved
+- [ ] GitHub account created
+- [ ] Node.js 18+ installed (run: `node --version`)
+- [ ] Vercel account created
+- [ ] Google account available
 
 ---
 
-## Phase 3: Configure Google Cloud (~20 minutes)
+## Part 1: Repository Setup
 
-### OAuth 2.0 Credentials
+### Step 1: Fork and Clone Repository
 
-**Guide**: [docs/guides/google-oauth.md](guides/google-oauth.md)
+- [ ] Forked repository on GitHub
+- [ ] Cloned to local machine: `git clone https://github.com/YOUR-USERNAME/lighthouse-public.git`
+- [ ] Opened project in code editor
 
-**Steps:**
+### Step 2: Create .env File ⚠️ CRITICAL
 
-- [ ] Create Google Cloud project
-- [ ] Enable Google+ API
-- [ ] Create OAuth 2.0 Client ID (Web application)
-- [ ] Note: Will add redirect URI after Vercel deployment
-- [ ] Copy Client ID to .env
-- [ ] Copy Client Secret to .env
+- [ ] Navigated to project: `cd lighthouse-public`
+- [ ] Ran: `cp .env.example .env`
+- [ ] Confirmed `.env` file exists
+- [ ] Opened `.env` in editor (KEEP OPEN)
+- [ ] Verified gitignore: `cat .gitignore | grep "\.env$"`
 
-| Credential | Created? | Copied to .env? |
-|------------|----------|-----------------|
-| GOOGLE_CLIENT_ID | ☐ | ☐ |
-| GOOGLE_CLIENT_SECRET | ☐ | ☐ |
-
-### Google Analytics API
-
-**Guide**: [docs/guides/google-analytics.md](guides/google-analytics.md)
-
-**Steps:**
-
-- [ ] Enable Google Analytics Data API
-- [ ] Enable Google Search Console API
-- [ ] Create service account
-- [ ] Download service account JSON key
-- [ ] Grant service account access to Analytics property
-- [ ] Copy Property ID to .env
-- [ ] Copy full JSON to .env (as GOOGLE_SERVICE_ACCOUNT_JSON)
-
-| Credential | Created? | Copied to .env? |
-|------------|----------|-----------------|
-| GOOGLE_ANALYTICS_PROPERTY_ID | ☐ | ☐ |
-| GOOGLE_SERVICE_ACCOUNT_JSON | ☐ | ☐ |
-
-**✅ Checkpoint**: Google Cloud fully configured
+**Why This Matters**: You'll add credentials to this file in every remaining step.
 
 ---
 
-## Phase 4: Get API Keys (~10 minutes)
+## Part 2: Account Creation (30 minutes)
 
-### Anthropic API Key
+### Step 3: Google Cloud Account
 
-**Guide**: Create account at https://console.anthropic.com/
+- [ ] Went to console.cloud.google.com
+- [ ] Signed in with Google account
+- [ ] Accepted Terms of Service
+- [ ] Created new project: "Lighthouse Dashboard"
+- [ ] Project creation completed
 
-**Steps:**
+### Step 4: Anthropic Account (Optional - $5/month)
 
-- [ ] Create Anthropic account
-- [ ] Add payment method
-- [ ] Generate API key (Settings → API Keys → Create Key)
-- [ ] Copy to .env
+**Skip if not using AI insights**
 
-| Key | Created? | Copied to .env? | Cost |
-|-----|----------|-----------------|------|
-| ANTHROPIC_API_KEY | ☐ | ☐ | ~$5/month |
+- [ ] Account created at console.anthropic.com
+- [ ] Email verified
+- [ ] API key generated
+- [ ] Payment method added
+- [ ] **Added to .env**:
+  ```bash
+  ANTHROPIC_API_KEY=sk-ant-________________________
+  ```
 
-### DataForSEO Credentials
+**Cost**: ~$5/month for daily AI insights
 
-**Guide**: [docs/guides/dataforseo.md](guides/dataforseo.md)
+### Step 5: DataForSEO Account (Optional - $50 deposit)
 
-**Steps:**
+**Skip if not using competitor analysis**
 
-- [ ] Create DataForSEO account
-- [ ] Add $50 credit (minimum deposit)
-- [ ] Get API credentials (Dashboard → API Access)
-- [ ] Copy login to .env
-- [ ] Copy password to .env
+- [ ] Account created at dataforseo.com
+- [ ] Email verified
+- [ ] $50 minimum deposit added
+- [ ] API credentials retrieved (Login + Password)
+- [ ] **Added to .env**:
+  ```bash
+  DATAFORSEO_LOGIN=your-email@example.com
+  DATAFORSEO_PASSWORD=________________________
+  ```
 
-| Credential | Created? | Copied to .env? | Cost |
-|------------|----------|-----------------|------|
-| DATAFORSEO_LOGIN | ☐ | ☐ | $50 one-time |
-| DATAFORSEO_PASSWORD | ☐ | ☐ | (lasts months) |
+**Cost**: $50 one-time (lasts 2-6 months)
 
-**✅ Checkpoint**: All API keys obtained
+### Step 6: Vercel Account
 
----
-
-## Phase 5: Complete .env File (~5 minutes)
-
-**Steps:**
-
-```bash
-# Copy template
-cp .env.example .env
-
-# Edit with your values
-# Use your preferred editor
-```
-
-**All Required Variables:**
-
-| Variable | Set in .env? | Source | Notes |
-|----------|-------------|--------|-------|
-| TARGET_BASE_URL | ☐ | Your website | e.g., https://example.com |
-| TARGET_DOMAIN | ☐ | Your website | e.g., example.com |
-| DASHBOARD_URL | ☐ | (Fill after Vercel deploy) | |
-| NEXTAUTH_URL | ☐ | (Same as DASHBOARD_URL) | |
-| NEXTAUTH_SECRET | ☐ | Phase 2 (generated) | |
-| CI_UPLOAD_SIGNING_KEY | ☐ | Phase 2 (generated) | ⚠️ Two-location |
-| GOOGLE_CLIENT_ID | ☐ | Phase 3 (OAuth) | |
-| GOOGLE_CLIENT_SECRET | ☐ | Phase 3 (OAuth) | |
-| GOOGLE_ANALYTICS_PROPERTY_ID | ☐ | Phase 3 (Analytics) | |
-| GOOGLE_SERVICE_ACCOUNT_JSON | ☐ | Phase 3 (Service Account) | |
-| ANTHROPIC_API_KEY | ☐ | Phase 4 | |
-| DATAFORSEO_LOGIN | ☐ | Phase 4 | |
-| DATAFORSEO_PASSWORD | ☐ | Phase 4 | |
-
-**Validation:**
-
-```bash
-node scripts/validate-setup.mjs
-```
-
-**Expected output**: `✅ VALIDATION PASSED`
-
-**✅ Checkpoint**: All variables set in .env and validated
+- [ ] Account created at vercel.com/signup
+- [ ] Connected with GitHub (recommended)
+- [ ] Email verified
 
 ---
 
-## Phase 6: Deploy to Vercel (~20 minutes)
+## Part 3: Configure Services (45 minutes)
 
-**Guide**: [docs/guides/vercel-kv-setup.md](guides/vercel-kv-setup.md)
+### Step 7: Configure Target Site
 
-### Initial Deployment
+- [ ] Determined target website URL
+- [ ] **Added to .env**:
+  ```bash
+  TARGET_BASE_URL=https://your-site.com
+  TARGET_DOMAIN=your-site.com
+  ```
 
-- [ ] Go to https://vercel.com/new
-- [ ] Import forked repository
-- [ ] Click Deploy (will fail - expected)
-- [ ] Copy Vercel URL: `https://your-project-abc123.vercel.app`
-- [ ] Update DASHBOARD_URL and NEXTAUTH_URL in .env
+### Step 8: Generate Secrets
 
-**Your Vercel URL**: `____________________________________`
+- [ ] Ran secret generation script:
+  - Mac/Linux: `bash scripts/generate-secrets.sh`
+  - Windows: `powershell -ExecutionPolicy Bypass -File scripts/generate-secrets.ps1`
+- [ ] **Added to .env**:
+  ```bash
+  NEXTAUTH_SECRET=________________________
+  CI_UPLOAD_SIGNING_KEY=________________________
+  ```
+- [ ] **Saved CI_UPLOAD_SIGNING_KEY separately** (Notepad/TextEdit) for later use
 
-### Add Vercel KV Storage
+**CRITICAL**: You'll need this EXACT value for:
+1. Vercel environment variables (Step 12)
+2. GitHub repository secrets (Step 15)
 
-- [ ] In Vercel project, click Storage tab
-- [ ] Create Database → KV → Upstash for Redis
-- [ ] Database name: `lighthouse-kv`
-- [ ] Choose region (closest to users)
-- [ ] Link to project
-- [ ] Verify KV_REST_API_URL and KV_REST_API_TOKEN auto-added
+**Common Mistake**: Keys don't match between locations → CI uploads fail
 
-### Upload Environment Variables to Vercel
+### Step 9: Set Up Google OAuth
 
-**All variables from .env must be added to Vercel:**
+**Refer to**: [google-oauth.md](./guides/google-oauth.md)
 
-| Variable | Added to Vercel? | Environment | Notes |
-|----------|------------------|-------------|-------|
-| TARGET_BASE_URL | ☐ | All | |
-| TARGET_DOMAIN | ☐ | All | |
-| DASHBOARD_URL | ☐ | All | Your Vercel URL |
-| NEXTAUTH_URL | ☐ | All | Same as DASHBOARD_URL |
-| NEXTAUTH_SECRET | ☐ | All | |
-| CI_UPLOAD_SIGNING_KEY | ☐ | All | ⚠️ MUST match GitHub |
-| GOOGLE_CLIENT_ID | ☐ | All | |
-| GOOGLE_CLIENT_SECRET | ☐ | All | |
-| GOOGLE_ANALYTICS_PROPERTY_ID | ☐ | All | |
-| GOOGLE_SERVICE_ACCOUNT_JSON | ☐ | All | |
-| ANTHROPIC_API_KEY | ☐ | All | |
-| DATAFORSEO_LOGIN | ☐ | All | |
-| DATAFORSEO_PASSWORD | ☐ | All | |
+- [ ] Went to Google Cloud Console → APIs & Services → Credentials
+- [ ] Selected "Lighthouse Dashboard" project
+- [ ] Created OAuth 2.0 Client ID
+- [ ] Configured consent screen (if prompted)
+- [ ] Set application type: Web application
+- [ ] Left redirect URIs blank for now
+- [ ] Copied Client ID and Client Secret
+- [ ] **Added to .env**:
+  ```bash
+  GOOGLE_CLIENT_ID=____________.apps.googleusercontent.com
+  GOOGLE_CLIENT_SECRET=GOCSPX-____________
+  ```
 
-**After adding all variables:**
+**Note**: You'll update redirect URI after deployment (Step 14)
 
-- [ ] Go to Deployments
-- [ ] Click "..." → Redeploy
-- [ ] Wait for successful deployment
+### Step 10: Set Up Google Analytics + Search Console (Optional)
 
-**✅ Checkpoint**: Dashboard deployed with all env vars
+**Refer to**: [google-analytics.md](./guides/google-analytics.md)
 
----
+**Skip if not tracking analytics**
 
-## Phase 7: Update Google OAuth Redirect URI (~5 minutes)
+- [ ] Enabled Google Analytics Data API
+- [ ] Enabled Google Search Console API
+- [ ] Created service account: "Lighthouse Analytics"
+- [ ] Generated JSON key and downloaded
+- [ ] Granted service account access to Analytics property
+- [ ] **Added to .env**:
+  ```bash
+  GOOGLE_ANALYTICS_PROPERTY_ID=properties/123456789
+  GOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account",...}
+  ```
 
-Now that you have your Vercel URL:
+**Note**: Paste entire JSON on one line
 
-- [ ] Go to Google Cloud Console → APIs & Services → Credentials
-- [ ] Click your OAuth 2.0 Client ID
-- [ ] Authorized redirect URIs → Add URI
-- [ ] Enter: `https://YOUR-VERCEL-URL/api/auth/callback/google`
-- [ ] Save
+### Step 11: Validate Configuration
 
-**Redirect URI added**: `____________________________________`
+- [ ] Ran: `npm install`
+- [ ] Ran: `npm run setup:validate`
+- [ ] ✅ All required variables validated
+- [ ] ✅ No errors reported
 
-**✅ Checkpoint**: OAuth redirect URI configured
-
----
-
-## Phase 8: Configure GitHub Actions (~15 minutes)
-
-**⚠️ CRITICAL TWO-LOCATION CHECK**
-
-These variables MUST be IDENTICAL in both Vercel and GitHub:
-- CI_UPLOAD_SIGNING_KEY
-- TARGET_BASE_URL
-
-### Add GitHub Secrets
-
-**Go to**: Repository → Settings → Secrets and variables → Actions
-
-| Secret Name | Added to GitHub? | Value Source | ⚠️ Match Vercel? |
-|-------------|------------------|--------------|------------------|
-| CI_UPLOAD_SIGNING_KEY | ☐ | From .env | ✅ MUST MATCH |
-| TARGET_BASE_URL | ☐ | From .env | ✅ MUST MATCH |
-| DASHBOARD_URL | ☐ | From .env | N/A |
-
-**Verification Steps:**
-
-1. Copy CI_UPLOAD_SIGNING_KEY from Vercel env vars
-2. Paste into GitHub Secrets
-3. Verify character-by-character match
-4. Repeat for TARGET_BASE_URL
-
-- [ ] CI_UPLOAD_SIGNING_KEY matches exactly
-- [ ] TARGET_BASE_URL matches exactly
-
-**✅ Checkpoint**: GitHub Secrets configured correctly
+**If you see errors**: Return to the step that generated that credential and verify it's in your `.env` file.
 
 ---
 
-## Phase 9: (Optional) Custom Domain (~15 minutes)
+## Part 4: Deployment
 
-**Guide**: [docs/guides/custom-domain.md](guides/custom-domain.md)
+### Step 12: Deploy to Vercel
 
-If you want `lighthouse.example.com` instead of `random-name.vercel.app`:
+- [ ] Went to vercel.com/new
+- [ ] Imported Git repository
+- [ ] Found forked repo: `YOUR-USERNAME/lighthouse-public`
+- [ ] Clicked Import
+- [ ] Added Vercel KV database (Storage → Create Database → KV)
+- [ ] Connected KV to project
+- [ ] Added environment variables to Vercel:
+  - [ ] `TARGET_BASE_URL`
+  - [ ] `TARGET_DOMAIN`
+  - [ ] `DASHBOARD_URL` (your Vercel URL)
+  - [ ] `NEXTAUTH_URL` (same as DASHBOARD_URL)
+  - [ ] `NEXTAUTH_SECRET`
+  - [ ] `CI_UPLOAD_SIGNING_KEY` ⚠️ (must match Step 8)
+  - [ ] `GOOGLE_CLIENT_ID`
+  - [ ] `GOOGLE_CLIENT_SECRET`
+  - [ ] Optional: `ANTHROPIC_API_KEY`
+  - [ ] Optional: `GOOGLE_ANALYTICS_PROPERTY_ID`
+  - [ ] Optional: `GOOGLE_SERVICE_ACCOUNT_JSON`
+  - [ ] Optional: `DATAFORSEO_LOGIN`
+  - [ ] Optional: `DATAFORSEO_PASSWORD`
+- [ ] Clicked Deploy
+- [ ] Deployment succeeded
+- [ ] Noted Vercel URL: `https://____________.vercel.app`
 
-- [ ] Add domain in Vercel (Settings → Domains)
-- [ ] Configure DNS CNAME record at registrar
-- [ ] Wait for DNS propagation (5-10 min)
-- [ ] Update OAuth redirect URI with custom domain
-- [ ] Update DASHBOARD_URL and NEXTAUTH_URL in Vercel
-- [ ] Update DASHBOARD_URL in GitHub Secrets
-- [ ] Redeploy
+### Step 13: Add KV Environment Variables to .env
 
-**Custom domain**: `____________________________________`
+After creating Vercel KV, add to local `.env`:
 
-**✅ Checkpoint**: Custom domain configured (optional)
+- [ ] **Added to .env**:
+  ```bash
+  KV_REST_API_URL=<from Vercel KV settings>
+  KV_REST_API_TOKEN=<from Vercel KV settings>
+  ```
 
----
+### Step 14: Update Google OAuth Redirect URI
 
-## Phase 10: Verify Setup (~15 minutes)
+- [ ] Returned to Google Cloud Console
+- [ ] Went to APIs & Services → Credentials
+- [ ] Clicked on OAuth 2.0 Client ID
+- [ ] Added redirect URI: `https://your-vercel-url.vercel.app/api/auth/callback/google`
+- [ ] Saved changes
+- [ ] Waited 2 minutes for propagation
 
-### Run First Scan
+### Step 15: Configure GitHub Actions
 
-- [ ] Go to GitHub repository → Actions tab
-- [ ] Click "Lighthouse Scan" workflow
-- [ ] Run workflow → Enable competitor analysis → Run
-- [ ] Wait 5-10 minutes for completion
-- [ ] Check for errors in workflow logs
+- [ ] Went to GitHub repository → Settings → Secrets and variables → Actions
+- [ ] Added repository secrets:
+  - [ ] `CI_UPLOAD_SIGNING_KEY` ⚠️ (must match Step 8 and Vercel)
+  - [ ] `TARGET_BASE_URL`
+  - [ ] `DASHBOARD_URL`
+  - [ ] Optional: `SLACK_WEBHOOK_URL`
+  - [ ] Optional: `VERCEL_DEPLOY_HOOK`
+- [ ] Went to Actions tab
+- [ ] Selected "Unlighthouse CI" workflow
+- [ ] Clicked "Run workflow"
+- [ ] Selected branch: main
+- [ ] Clicked "Run workflow"
+- [ ] ✅ Workflow completed successfully
 
-### Verify Dashboard
+**Two-Location Verification**:
 
-- [ ] Visit your DASHBOARD_URL
-- [ ] Sign in with Google
-- [ ] Verify performance scores appear (mobile + desktop)
-- [ ] Verify AI insights panel displays
-- [ ] Verify competitor analysis data appears
-- [ ] Verify Google Analytics metrics display
-- [ ] Check historical trend charts
+| Location | Value Matches |
+|----------|---------------|
+| Vercel `CI_UPLOAD_SIGNING_KEY` | ☐ |
+| GitHub `CI_UPLOAD_SIGNING_KEY` | ☐ |
 
-**All Features Working:**
-
-| Feature | Working? | Notes |
-|---------|----------|-------|
-| Performance scores | ☐ | Mobile + desktop |
-| AI insights | ☐ | Claude-generated recommendations |
-| Competitor analysis | ☐ | SERP tracking |
-| Google Analytics | ☐ | Traffic metrics |
-| Historical trends | ☐ | Charts and graphs |
-
-**✅ Checkpoint**: All features verified working
-
----
-
-## Setup Complete! 🎉
-
-**Final Checklist:**
-
-- [ ] All accounts created
-- [ ] All secrets generated
-- [ ] All environment variables set (Vercel)
-- [ ] GitHub Secrets configured (two-location check passed)
-- [ ] First scan completed successfully
-- [ ] Dashboard displays all features
-- [ ] OAuth sign-in works
-- [ ] AI insights generating
-- [ ] Competitor data populating
-- [ ] Analytics data showing
-
-**What Happens Next:**
-
-- GitHub Actions runs daily at 2 AM UTC
-- Results automatically upload to dashboard
-- AI insights refresh on demand
-- Competitor data updates with each scan
-- Historical data retained for 60 days
-
-**Maintenance:**
-
-- Review Anthropic usage monthly: https://console.anthropic.com/settings/usage
-- Check DataForSEO balance monthly: https://dataforseo.com/billing
-- Review and act on AI quick wins regularly
+**Verify**: Both checkboxes above should be checked and values should match exactly.
 
 ---
 
-## Troubleshooting
+## Complete .env Checklist
 
-If something isn't working, check:
+Use this to verify all credentials are in your `.env` file:
 
-1. **401 Errors in CI**: CI_UPLOAD_SIGNING_KEY doesn't match between Vercel and GitHub
-2. **No AI Insights**: Verify ANTHROPIC_API_KEY in Vercel env vars
-3. **No Competitor Data**: Verify DATAFORSEO credentials and account balance
-4. **No Analytics**: Verify service account has access to Analytics property
-5. **Can't Sign In**: Verify OAuth redirect URI matches DASHBOARD_URL exactly
+**Required (Minimum Viable Deployment)**:
+- [ ] `TARGET_BASE_URL`
+- [ ] `TARGET_DOMAIN`
+- [ ] `DASHBOARD_URL`
+- [ ] `NEXTAUTH_URL`
+- [ ] `NEXTAUTH_SECRET`
+- [ ] `CI_UPLOAD_SIGNING_KEY`
+- [ ] `GOOGLE_CLIENT_ID`
+- [ ] `GOOGLE_CLIENT_SECRET`
+- [ ] `KV_REST_API_URL`
+- [ ] `KV_REST_API_TOKEN`
 
-See [README.md](../README.md#troubleshooting) for detailed troubleshooting steps.
+**Optional (Enhanced Features)**:
+- [ ] `ANTHROPIC_API_KEY`
+- [ ] `GOOGLE_ANALYTICS_PROPERTY_ID`
+- [ ] `GOOGLE_SERVICE_ACCOUNT_JSON`
+- [ ] `DATAFORSEO_LOGIN`
+- [ ] `DATAFORSEO_PASSWORD`
+- [ ] `SLACK_WEBHOOK_URL`
+
+---
+
+## Troubleshooting Quick Reference
+
+### .env File Issues
+- **Can't find .env**: Make sure you ran `cp .env.example .env` in Step 2
+- **Variables not loading**: Check file is named `.env` (not `.env.txt`)
+- **Validation failing**: Open `.env` and verify no extra spaces or quotes
+
+### Two-Location Mismatch
+- **CI uploads failing**: Compare `CI_UPLOAD_SIGNING_KEY` in Vercel vs GitHub
+- **How to fix**: Copy key from `.env` file → paste to both locations
+
+### OAuth Issues
+- **redirect_uri_mismatch**: Verify redirect URI in Google Cloud Console matches Vercel URL exactly
+- **Still broken**: Wait 2-3 minutes after updating redirect URI
+
+### Deployment Failures
+- **Vercel build fails**: Check environment variables are set in Vercel dashboard
+- **KV connection errors**: Verify KV database is linked to project
+
+### GitHub Actions Failures
+- **401 Upload Error**: Check `CI_UPLOAD_SIGNING_KEY` matches in Vercel and GitHub
+- **404 Dashboard URL**: Verify `DASHBOARD_URL` in GitHub Secrets matches your actual Vercel URL
+
+---
+
+## You're Done! 🎉
+
+All steps completed. Your dashboard should be:
+- ✅ Deployed and accessible at your Vercel URL
+- ✅ Sign-in with Google working
+- ✅ GitHub Actions running daily scans
+- ✅ Data persisting in Vercel KV
+
+**Next Steps**:
+- Visit your dashboard and sign in
+- Wait for first CI scan (runs daily at 2 AM UTC, or trigger manually)
+- Configure competitors (if using DataForSEO)
+- Set up custom domain (optional): [custom-domain.md](./guides/custom-domain.md)

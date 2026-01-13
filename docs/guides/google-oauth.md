@@ -1,5 +1,19 @@
 # Google OAuth Setup Guide
 
+## When to Use This Guide
+
+**From the main README**: You're here from Step 9 of the main setup guide.
+
+**Purpose**: This guide provides detailed walkthrough for Google OAuth setup, including account creation. The README has a quick summary - this guide has the full details.
+
+**Prerequisites**:
+- ✅ You've completed Steps 1-2 of the README (forked repo, created .env file)
+- ✅ Your `.env` file is open in your editor
+
+**After completing this guide**: Return to the README and continue with Step 10.
+
+---
+
 This guide walks you through setting up Google OAuth for the Lighthouse SEO Dashboard, starting from account creation.
 
 **Estimated Time**: 20 minutes
@@ -191,14 +205,14 @@ A popup will appear with your OAuth credentials:
 
 ### Add to Your .env File
 
-Open your `.env` file and add these lines:
+**Open your `.env` file** (you created this in Step 2 of the README) and add these lines:
 
 ```bash
 GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=GOCSPX-your-client-secret
 ```
 
-**Save the file** - you'll upload these to Vercel in Step 10 of the main README.
+**Save the file** (Ctrl+S / Cmd+S) - you'll upload these to Vercel in Step 12 of the main README.
 
 ---
 

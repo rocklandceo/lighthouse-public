@@ -1,5 +1,20 @@
 # DataForSEO Setup Guide
 
+## When to Use This Guide
+
+**From the main README**: You're here from Step 5 of the main setup guide.
+
+**Purpose**: This guide provides detailed walkthrough for DataForSEO setup, including account creation. The README has a quick summary - this guide has the full details.
+
+**Prerequisites**:
+- ✅ You've completed Steps 1-2 of the README (forked repo, created .env file)
+- ✅ Your `.env` file is open in your editor
+- ✅ Credit card or PayPal account ready ($50 minimum deposit)
+
+**After completing this guide**: Return to the README and continue with Step 6.
+
+---
+
 This guide walks you through setting up DataForSEO integration for competitor analysis and content gap identification, starting from account creation.
 
 **Estimated Time**: 15 minutes

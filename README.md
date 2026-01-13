@@ -5,7 +5,7 @@ A comprehensive performance monitoring and SEO analytics platform with AI-powere
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-**Estimated Setup Time**: 2 hours | **Track Progress**: [docs/SETUP-CREDENTIALS.md](docs/SETUP-CREDENTIALS.md)
+**Estimated Setup Time**: 2 hours
 
 ---
 
@@ -46,39 +46,72 @@ All features are included for this cost. No hidden fees or surprise charges.
 
 ## Prerequisites
 
-### What You Need Before Starting
+### Required Accounts (Must Have)
 
-- **Your business website** with a public sitemap
+- **GitHub account** - Host repository and run automated scans
+- **Node.js 18+** - Run validation and setup scripts
+- **Vercel account** - Deploy dashboard (free tier works)
+- **Google account** - OAuth authentication, Analytics, and Search Console
+- **Google Analytics 4** - Traffic metrics and user behavior data (free)
+- **Google Search Console** - Search performance and SEO insights (free)
+- **Your business website** - Must have a public sitemap for scanning
+
+### Recommended Accounts (For Full Functionality)
+
+Without these, the dashboard only shows basic Lighthouse scores:
+
+- **Anthropic account** - AI-powered SEO insights and recommendations (~$5/month)
+- **DataForSEO account** - Competitor analysis and SERP tracking ($50 minimum deposit, lasts 2-6 months)
+
+### Optional Enhancements
+
+- **Slack webhook** - Automated notifications for performance regressions (free)
+- **Custom domain** - Professional URL like `lighthouse.yourcompany.com`
+
+### Time & Technical Requirements
+
 - **2 hours of focused time** to complete setup
-- **Credit card** for Anthropic (~$5/month) + DataForSEO ($50 one-time)
-- **Admin access** to your website's Google Analytics
-
-### Technical Requirements
-
 - Basic familiarity with terminal/command line
-- Ability to access DNS settings for your domain (for custom domain setup)
 - Admin access to create accounts and API keys
+- Credit card for Anthropic and DataForSEO (if using)
 
 **No coding required** - just follow the step-by-step instructions.
 
 ---
 
+## Complete Guide Index
+
+**Required for Basic Deployment** (covered in this README):
+- Google OAuth (sign-in functionality)
+- Vercel deployment and KV database
+- GitHub Actions CI setup
+
+**Optional Integrations** (enhance functionality):
+- [Google Analytics Guide](docs/guides/google-analytics.md) - Traffic metrics and Search Console data
+- [DataForSEO Guide](docs/guides/dataforseo.md) - Competitor analysis ($50 minimum deposit)
+- [Anthropic Claude](https://console.anthropic.com) - AI-powered SEO insights (~$5/month)
+- Slack Notifications - Automated alerts for regressions
+
+**Additional Guides**:
+- [GitHub Actions Setup](docs/guides/github-actions.md) - Detailed CI/CD configuration
+- [Custom Domain](docs/guides/custom-domain.md) - Professional URL setup
+- [Branding Customization](docs/guides/branding.md) - Personalize your dashboard
+
+---
+
 ## Complete Setup Guide
 
-Follow these steps in order. Use [docs/SETUP-CREDENTIALS.md](docs/SETUP-CREDENTIALS.md) to track your progress.
+Follow these steps in order.
 
 ### Part 1: Create Accounts (30 minutes)
 
 Create accounts for all required services before configuring anything.
 
-#### Step 1: GitHub Account
+#### Step 1: Fork and Clone Repository
 
 **Why needed**: Host your repository and run automated scans via GitHub Actions
 
-**If you already have GitHub**:
-- Skip to Step 2
-
-**If you need to create an account**:
+**If you need to create a GitHub account**:
 1. Go to https://github.com/signup
 2. Enter your email address
 3. Create a password
@@ -91,11 +124,64 @@ Create accounts for all required services before configuring anything.
 2. Click **Fork** button (top right)
 3. This creates your own copy at `github.com/YOUR-USERNAME/lighthouse-public`
 
-✅ **Checkpoint**: You have a GitHub account and forked repository
+**Clone to your computer**:
+1. Open terminal/command prompt
+2. Navigate to where you want the project:
+   ```bash
+   cd ~/projects  # or your preferred location
+   ```
+3. Clone your fork:
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/lighthouse-public.git
+   cd lighthouse-public
+   ```
+
+✅ **Checkpoint**: Repository forked and cloned locally
 
 ---
 
-#### Step 2: Google Cloud Account
+#### Step 2: Create Your .env File
+
+**Why now?** You'll be generating credentials in the next steps. Having your `.env` file ready means you can add each credential immediately after generating it.
+
+**Actions**:
+
+1. Make sure you're in the project directory:
+   ```bash
+   cd lighthouse-public
+   ```
+
+2. Copy the example file:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Open `.env` in your code editor (keep it open throughout setup):
+   ```bash
+   # Mac
+   open .env
+
+   # Or use your preferred editor:
+   code .env      # VSCode
+   nano .env      # Terminal editor
+   vim .env       # Vim
+   ```
+
+4. **Verify** `.env` is gitignored:
+   ```bash
+   cat .gitignore | grep "\.env$"
+   ```
+   You should see: `.env`
+
+**📋 Track Your Progress**: Now that you have the repository cloned, open [docs/SETUP-CREDENTIALS.md](docs/SETUP-CREDENTIALS.md) alongside this README. It provides a checklist-style tracker for each step.
+
+**⚠️ Security**: Never commit your `.env` file. It contains secrets and is automatically excluded by `.gitignore`.
+
+✅ **Checkpoint**: `.env` file created and open in editor
+
+---
+
+#### Step 3: Google Cloud Account
 
 **Why needed**: OAuth login + Google Analytics API + Search Console API
 
@@ -118,11 +204,13 @@ Create accounts for all required services before configuring anything.
 
 ---
 
-#### Step 3: Anthropic Account
+#### Step 4: Anthropic Account (Optional - $5/month)
 
-**Why needed**: AI-powered SEO insights (core feature)
+**Why needed**: AI-powered SEO insights
 
 **Cost**: ~$5/month for daily scans
+
+**Skip if**: You don't want AI-generated insights (dashboard still works)
 
 **Steps**:
 1. Go to https://console.anthropic.com/
@@ -143,17 +231,29 @@ Create accounts for all required services before configuring anything.
 2. Add credit/debit card
 3. No charges until you use the API
 
-✅ **Checkpoint**: Anthropic API key obtained and saved
+**Add to .env immediately**:
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-________________________
+```
+
+Save the file (Ctrl+S / Cmd+S).
+
+✅ **Checkpoint**: Anthropic API key obtained and added to .env
 
 ---
 
-#### Step 4: DataForSEO Account
+#### Step 5: DataForSEO Account (Optional - $50 deposit)
 
-**Why needed**: Competitor analysis and SERP tracking (core feature)
+**Why needed**: Competitor analysis and SERP tracking
 
-**Cost**: $50 minimum deposit (lasts months)
+**Cost**: $50 minimum deposit (lasts 2-6 months)
 
-**Steps**:
+**Skip if**: You don't need competitor analysis (dashboard still works)
+
+**Detailed guide**: [docs/guides/dataforseo.md](docs/guides/dataforseo.md)
+
+**Quick steps**:
 1. Go to https://dataforseo.com/
 2. Click **Sign Up**
 3. Fill in registration form
@@ -170,15 +270,22 @@ Create accounts for all required services before configuring anything.
    - Copy your **Login** (username)
    - Copy your **Password** (API password)
 
-**⚠️ CRITICAL**: Save these credentials - you'll need them in .env file
+**Add to .env immediately**:
+
+```bash
+DATAFORSEO_LOGIN=your-email@example.com
+DATAFORSEO_PASSWORD=________________________
+```
+
+Save the file (Ctrl+S / Cmd+S).
 
 **Usage estimate**: $50 lasts ~3-6 months for typical daily scans (depends on number of keywords tracked)
 
-✅ **Checkpoint**: DataForSEO account created with $50 credit
+✅ **Checkpoint**: DataForSEO account created and credentials added to .env
 
 ---
 
-#### Step 5: Vercel Account
+#### Step 6: Vercel Account
 
 **Why needed**: Host the dashboard
 
@@ -227,7 +334,27 @@ That's it! Vercel account is ready.
 
 Now configure the services you created.
 
-#### Step 7: Generate Secrets
+#### Step 7: Configure Target Site
+
+Add your website's information to `.env`.
+
+**Open your `.env` file** (you created this in Step 2) and add:
+
+```bash
+# Target Site
+TARGET_BASE_URL=https://your-website.com
+TARGET_DOMAIN=your-website.com
+```
+
+Replace with your actual website URL.
+
+Save the file (Ctrl+S / Cmd+S).
+
+✅ **Checkpoint**: Target site configured in .env
+
+---
+
+#### Step 8: Generate Secrets
 
 Generate required security secrets locally.
 
@@ -252,13 +379,35 @@ powershell -ExecutionPolicy Bypass -File scripts/generate-secrets.ps1
    Value: abc123def456...
 ```
 
-**⚠️ ACTION**: Copy these values to a text file. You'll need them multiple times.
+**Add to .env immediately**:
 
-**✅ Checkpoint**: Secrets generated and saved
+```bash
+NEXTAUTH_SECRET=<paste from output above>
+CI_UPLOAD_SIGNING_KEY=<paste from output above>
+```
+
+Save the file (Ctrl+S / Cmd+S).
+
+**⚠️ CRITICAL - Save CI_UPLOAD_SIGNING_KEY Separately**:
+
+The `CI_UPLOAD_SIGNING_KEY` must be identical in TWO locations:
+1. Vercel environment variables (you'll add in Step 13)
+2. GitHub repository secrets (you'll add in Step 15)
+
+**Recommended**: Copy this key to a temporary notepad before continuing. This is the #1 cause of CI upload failures.
+
+| Location | When Added | Purpose |
+|----------|-----------|---------|
+| Vercel Env Vars | Step 13 | Dashboard validates uploads |
+| GitHub Secrets | Step 15 | CI signs upload requests |
+
+**Verification**: Before deploying, confirm both values match character-for-character.
+
+✅ **Checkpoint**: Secrets generated and added to .env
 
 ---
 
-#### Step 8: Set Up Google OAuth
+#### Step 9: Set Up Google OAuth
 
 **Why needed**: Allow users to sign in to the dashboard
 
@@ -283,15 +432,28 @@ powershell -ExecutionPolicy Bypass -File scripts/generate-secrets.ps1
    - Click **Create**
 7. Copy **Client ID** and **Client Secret**
 
-**⚠️ Note**: We'll add the redirect URI in Step 15 after getting your Vercel URL
+**Add to .env immediately**:
 
-**✅ Checkpoint**: OAuth credentials created
+```bash
+GOOGLE_CLIENT_ID=____________.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-____________
+```
+
+Save the file (Ctrl+S / Cmd+S).
+
+**⚠️ Note**: We'll add the redirect URI in Step 14 after getting your Vercel URL
+
+✅ **Checkpoint**: OAuth credentials created and added to .env
 
 ---
 
-#### Step 9: Set Up Google Analytics + Search Console
+#### Step 10: Set Up Google Analytics + Search Console (Optional)
 
 **Why needed**: Fetch traffic metrics and search performance data
+
+**Cost**: Free
+
+**Skip if**: You don't need analytics integration (dashboard still works)
 
 **Detailed guide**: [docs/guides/google-analytics.md](docs/guides/google-analytics.md)
 
@@ -319,7 +481,6 @@ powershell -ExecutionPolicy Bypass -File scripts/generate-secrets.ps1
 4. Copy JSON content:
    - Open the downloaded JSON file
    - Copy the **entire contents** (it's one long line)
-   - Save for .env file
 
 5. Grant access to Analytics:
    - Go to [Google Analytics](https://analytics.google.com/)
@@ -329,78 +490,51 @@ powershell -ExecutionPolicy Bypass -File scripts/generate-secrets.ps1
    - Role: **Viewer**
    - Click **Add**
 
-**✅ Checkpoint**: Analytics API configured
+**Add to .env immediately**:
+
+```bash
+GOOGLE_ANALYTICS_PROPERTY_ID=properties/123456789
+GOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account",...}
+```
+
+Paste the entire JSON content on one line for `GOOGLE_SERVICE_ACCOUNT_JSON`.
+
+Save the file (Ctrl+S / Cmd+S).
+
+✅ **Checkpoint**: Analytics API configured and credentials added to .env
 
 ---
 
-#### Step 10: Fill Out .env File
+#### Step 11: Validate Your Configuration
 
-Create your environment file with all credentials.
+**You've created your `.env` file in Step 2** and added credentials in Steps 4-10. Now validate that all required variables are set correctly.
 
-**Steps**:
-
-```bash
-# Copy template
-cp .env.example .env
-
-# Edit with your favorite editor
-# nano .env (or vim, VSCode, etc.)
-```
-
-**Fill in these variables**:
+**Run the validation script**:
 
 ```bash
-# Target Site
-TARGET_BASE_URL=https://your-website.com
-TARGET_DOMAIN=your-website.com
-
-# Dashboard URLs (fill after Step 12)
-DASHBOARD_URL=
-NEXTAUTH_URL=
-
-# Secrets (from Step 7)
-NEXTAUTH_SECRET=<paste from generate-secrets output>
-CI_UPLOAD_SIGNING_KEY=<paste from generate-secrets output>
-
-# Google OAuth (from Step 8)
-GOOGLE_CLIENT_ID=<paste Client ID>
-GOOGLE_CLIENT_SECRET=<paste Client Secret>
-
-# Google Analytics (from Step 9)
-GOOGLE_ANALYTICS_PROPERTY_ID=properties/123456789
-GOOGLE_SERVICE_ACCOUNT_JSON=<paste entire JSON object>
-
-# Anthropic (from Step 3)
-ANTHROPIC_API_KEY=sk-ant-api03-<your-key>
-
-# DataForSEO (from Step 4)
-DATAFORSEO_LOGIN=<your-login>
-DATAFORSEO_PASSWORD=<your-password>
-
-# Vercel KV (will be auto-added in Step 13)
-# KV_REST_API_URL=
-# KV_REST_API_TOKEN=
-```
-
-**Validate your configuration**:
-
-```bash
-node scripts/validate-setup.mjs
+npm install
+npm run setup:validate
 ```
 
 **Expected output**:
 ```
 ✅ VALIDATION PASSED
-   All required variables are set.
+   All required variables are set correctly:
+   - TARGET_BASE_URL ✓
+   - NEXTAUTH_SECRET ✓ (32+ characters)
+   - GOOGLE_CLIENT_ID ✓
+   - CI_UPLOAD_SIGNING_KEY ✓
+   ...
 ```
 
 **If validation fails**:
-- Review error messages
-- Check each variable is filled in
-- Ensure no extra spaces or quotes
+- Review error messages carefully
+- Go back to the relevant step and check the variable
+- Ensure no extra spaces or quotes around values
+- Make sure you saved the `.env` file
 - Re-run validation
 
-**✅ Checkpoint**: All credentials in .env file and validated
+✅ **Checkpoint**: All required credentials validated
 
 ---
 
@@ -408,7 +542,7 @@ node scripts/validate-setup.mjs
 
 Deploy your dashboard to Vercel.
 
-#### Step 11: Initial Vercel Deployment
+#### Step 12: Initial Vercel Deployment
 
 1. Go to https://vercel.com/new
 2. Click **Import Git Repository**
