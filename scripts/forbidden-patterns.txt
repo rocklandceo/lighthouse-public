@@ -3,6 +3,7 @@
 # Empty lines and lines starting with # are ignored
 
 # Company identifiers
+# Note: "rockland" in github.com/rocklandceo/lighthouse-public URLs is allowed (template source)
 caseclock
 rockland
 @rockland\.cc

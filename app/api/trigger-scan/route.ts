@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { getConfig, isGitHubTriggerEnabled } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 minutes
@@ -13,23 +14,22 @@ export async function POST(_request: NextRequest) {
     }
 
     // Trigger GitHub Actions workflow via repository dispatch
-    const githubToken = process.env.GITHUB_TOKEN;
-    const repoOwner = process.env.GITHUB_REPO_OWNER;
-    const repoName = process.env.GITHUB_REPO_NAME;
-
-    if (!githubToken || !repoOwner || !repoName) {
+    if (!isGitHubTriggerEnabled()) {
       return NextResponse.json(
-        { error: 'GitHub configuration incomplete. Set GITHUB_TOKEN, GITHUB_REPO_OWNER, and GITHUB_REPO_NAME.' },
+        { error: 'GitHub trigger not configured. Set GITHUB_TOKEN, GITHUB_REPO_OWNER, and GITHUB_REPO_NAME in Vercel environment variables.' },
         { status: 500 }
       );
     }
+
+    const config = getConfig();
+    const { token, repoOwner, repoName } = config.github;
 
     const response = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`,
       {
         method: 'POST',
         headers: {
-          Authorization: `token ${githubToken}`,
+          Authorization: `token ${token}`,
           Accept: 'application/vnd.github.v3+json',
           'Content-Type': 'application/json',
         },

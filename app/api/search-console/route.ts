@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { getConfig } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,8 +43,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get service account credentials from environment
-    const credentials = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    // Get service account credentials from config
+    const config = getConfig();
+    const credentials = config.analytics.serviceAccountJson;
     if (!credentials) {
       return NextResponse.json(
         { error: 'Google Search Console credentials not configured' },
@@ -67,15 +69,9 @@ export async function GET(request: NextRequest) {
       auth,
     });
 
-    // Get site URL from environment
-    const baseSiteUrl = process.env.TARGET_BASE_URL || process.env.SITE_URL;
-    if (!baseSiteUrl) {
-      return NextResponse.json(
-        { error: 'TARGET_BASE_URL environment variable not configured' },
-        { status: 500 }
-      );
-    }
-    const domain = baseSiteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    // Get site URL from config
+    const baseSiteUrl = config.app.targetBaseUrl;
+    const domain = config.app.targetDomain;
 
     // Try different property formats (Search Console accepts different URL formats)
     const siteUrlVariants = [

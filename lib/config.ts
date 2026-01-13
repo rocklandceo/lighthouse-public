@@ -8,10 +8,6 @@
  * Usage:
  *   import { config } from '@/lib/config';
  *   const domain = config.app.targetDomain;
- *
- * For scripts (ESM):
- *   import { loadConfig } from '../lib/config.mjs';
- *   const config = loadConfig();
  */
 
 // ============================================
@@ -101,6 +97,17 @@ export interface OperationalConfig {
   keepRuns: number;
 }
 
+export interface GitHubConfig {
+  /** GitHub personal access token for triggering workflows */
+  token: string | null;
+  /** GitHub repository owner (username or org) */
+  repoOwner: string | null;
+  /** GitHub repository name */
+  repoName: string | null;
+  /** Vercel deploy hook URL for triggering redeploys */
+  vercelDeployHook: string | null;
+}
+
 export interface Config {
   app: AppConfig;
   auth: AuthConfig;
@@ -111,6 +118,7 @@ export interface Config {
   ci: CIConfig;
   notifications: NotificationConfig;
   operational: OperationalConfig;
+  github: GitHubConfig;
 }
 
 // ============================================
@@ -246,8 +254,14 @@ export function loadConfig(): Config {
       slackWebhookUrl: getOptional('SLACK_WEBHOOK_URL') || null,
     },
     operational: {
-      regressionThreshold: getOptionalNumber('REGRESSION_THRESHOLD', 5),
+      regressionThreshold: getOptionalNumber('REGRESSION_THRESHOLD', 10),
       keepRuns: getOptionalNumber('KEEP_RUNS', 10),
+    },
+    github: {
+      token: getOptional('GITHUB_TOKEN') || null,
+      repoOwner: getOptional('GITHUB_REPO_OWNER') || null,
+      repoName: getOptional('GITHUB_REPO_NAME') || null,
+      vercelDeployHook: getOptional('VERCEL_DEPLOY_HOOK') || null,
     },
   };
 
@@ -342,4 +356,12 @@ export function isSecureUploadEnabled(): boolean {
  */
 export function isLegacyUploadEnabled(): boolean {
   return !!getConfig().ci.uploadSecret;
+}
+
+/**
+ * Check if GitHub workflow triggers are available
+ */
+export function isGitHubTriggerEnabled(): boolean {
+  const cfg = getConfig();
+  return !!(cfg.github.token && cfg.github.repoOwner && cfg.github.repoName);
 }

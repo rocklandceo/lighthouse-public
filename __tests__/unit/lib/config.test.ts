@@ -76,6 +76,61 @@ describe('lib/config', () => {
       expect(config.app.sitemapUrl).toBe('https://example.com/sitemap.xml');
       expect(config.ai.model).toBe('claude-3-5-haiku-20241022');
     });
+
+    it('regression threshold defaults to 10', async () => {
+      process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
+      process.env.GOOGLE_CLIENT_ID = 'test-client-id';
+      process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
+      process.env.KV_REST_API_URL = 'https://kv.example.com';
+      process.env.KV_REST_API_TOKEN = 'test-kv-token';
+
+      const { loadConfig } = await import('@/lib/config');
+      const config = loadConfig();
+
+      expect(config.operational.regressionThreshold).toBe(10);
+    });
+
+    it('loads optional GitHub configuration', async () => {
+      process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
+      process.env.GOOGLE_CLIENT_ID = 'test-client-id';
+      process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
+      process.env.KV_REST_API_URL = 'https://kv.example.com';
+      process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.GITHUB_TOKEN = 'ghp_test_token';
+      process.env.GITHUB_REPO_OWNER = 'testuser';
+      process.env.GITHUB_REPO_NAME = 'testrepo';
+      process.env.VERCEL_DEPLOY_HOOK = 'https://api.vercel.com/v1/integrations/deploy/test';
+
+      const { loadConfig } = await import('@/lib/config');
+      const config = loadConfig();
+
+      expect(config.github.token).toBe('ghp_test_token');
+      expect(config.github.repoOwner).toBe('testuser');
+      expect(config.github.repoName).toBe('testrepo');
+      expect(config.github.vercelDeployHook).toBe('https://api.vercel.com/v1/integrations/deploy/test');
+    });
+
+    it('returns null for missing GitHub configuration', async () => {
+      process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
+      process.env.GOOGLE_CLIENT_ID = 'test-client-id';
+      process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
+      process.env.KV_REST_API_URL = 'https://kv.example.com';
+      process.env.KV_REST_API_TOKEN = 'test-kv-token';
+
+      const { loadConfig } = await import('@/lib/config');
+      const config = loadConfig();
+
+      expect(config.github.token).toBeNull();
+      expect(config.github.repoOwner).toBeNull();
+      expect(config.github.repoName).toBeNull();
+      expect(config.github.vercelDeployHook).toBeNull();
+    });
   });
 
   describe('feature availability checks', () => {
@@ -123,6 +178,27 @@ describe('lib/config', () => {
       process.env.DATAFORSEO_LOGIN = 'test-login';
       const { isCompetitorAnalysisEnabled } = await import('@/lib/config');
       expect(isCompetitorAnalysisEnabled()).toBe(false);
+    });
+
+    it('isGitHubTriggerEnabled returns false when GitHub variables not set', async () => {
+      const { isGitHubTriggerEnabled } = await import('@/lib/config');
+      expect(isGitHubTriggerEnabled()).toBe(false);
+    });
+
+    it('isGitHubTriggerEnabled returns true when all three GitHub variables set', async () => {
+      process.env.GITHUB_TOKEN = 'ghp_test_token';
+      process.env.GITHUB_REPO_OWNER = 'testuser';
+      process.env.GITHUB_REPO_NAME = 'testrepo';
+      const { isGitHubTriggerEnabled } = await import('@/lib/config');
+      expect(isGitHubTriggerEnabled()).toBe(true);
+    });
+
+    it('isGitHubTriggerEnabled returns false when only some GitHub variables set', async () => {
+      process.env.GITHUB_TOKEN = 'ghp_test_token';
+      process.env.GITHUB_REPO_OWNER = 'testuser';
+      // Missing GITHUB_REPO_NAME
+      const { isGitHubTriggerEnabled } = await import('@/lib/config');
+      expect(isGitHubTriggerEnabled()).toBe(false);
     });
   });
 });

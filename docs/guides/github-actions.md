@@ -12,32 +12,89 @@ The included GitHub Actions workflow:
 - Detects score regressions
 - Sends Slack notifications (optional)
 
-## Step 1: Add Repository Secrets
+**Prerequisites**: You must have:
+- Deployed your dashboard to Vercel
+- Forked this repository to your GitHub account
+- Admin access to your forked repository
 
-Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions**.
+---
 
-Add these secrets:
+## Step 1: Generate CI Upload Signing Key
 
-| Secret | Description | Example |
-|--------|-------------|---------|
-| `TARGET_BASE_URL` | Website to scan | `https://example.com` |
-| `DASHBOARD_URL` | Your dashboard URL | `https://my-dashboard.vercel.app` |
-| `CI_UPLOAD_SIGNING_KEY` | HMAC key for secure uploads | Generate with `openssl rand -hex 32` |
+The signing key secures uploads from GitHub Actions to your dashboard.
 
-### Generating the Signing Key
+### Generate the Key
 
-Run this command in your terminal:
+Run this command in your terminal (Mac/Linux/Git Bash):
 
 ```bash
 openssl rand -hex 32
 ```
 
-Copy the output and add it as `CI_UPLOAD_SIGNING_KEY` to:
+This will output a 64-character hex string. Example:
+```
+a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+```
 
-1. GitHub repository secrets
-2. Vercel environment variables
+**⚠️ CRITICAL**: Save this value - you'll need to add it to **TWO** locations with the **EXACT** same value:
+1. Vercel environment variables
+2. GitHub repository secrets
 
-Both must match exactly.
+If they don't match, uploads will fail with 401 Unauthorized errors.
+
+### Add to Vercel First
+
+1. Go to your Vercel project dashboard
+2. Click **Settings** → **Environment Variables**
+3. Click **Add New**
+4. Variable name: `CI_UPLOAD_SIGNING_KEY`
+5. Value: Paste the 64-character hex string
+6. Click **Save**
+
+### Add to GitHub Secrets
+
+1. Go to your GitHub repository
+2. Click **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Name: `CI_UPLOAD_SIGNING_KEY`
+5. Value: Paste the **SAME** 64-character hex string
+6. Click **Add secret**
+
+---
+
+## Step 2: Add Required GitHub Secrets
+
+In addition to `CI_UPLOAD_SIGNING_KEY`, add these required secrets:
+
+### DASHBOARD_URL (Required)
+
+- Name: `DASHBOARD_URL`
+- Value: Your Vercel URL (e.g., `https://my-dashboard.vercel.app`)
+- **Important**: No trailing slash
+
+### TARGET_BASE_URL (Required)
+
+- Name: `TARGET_BASE_URL`
+- Value: `https://your-website.com` (the site you're monitoring)
+- **Important**: No trailing slash
+
+### SITEMAP_URL (Optional)
+
+- Name: `SITEMAP_URL`
+- Value: `https://your-website.com/sitemap.xml` (custom sitemap location)
+- **Default**: If not set, defaults to `${TARGET_BASE_URL}/sitemap.xml`
+- Only needed if your sitemap is at a non-standard location
+
+**Summary of GitHub Secrets**:
+
+| Secret | Required | Example | Notes |
+|--------|----------|---------|-------|
+| `DASHBOARD_URL` | ✅ Yes | `https://my-dashboard.vercel.app` | Where to upload scan results |
+| `CI_UPLOAD_SIGNING_KEY` | ✅ Yes | `a1b2c3d4e5...` (64 chars) | HMAC signing key - **Must match Vercel env var** |
+| `TARGET_BASE_URL` | ✅ Yes | `https://example.com` | Website you're monitoring |
+| `SITEMAP_URL` | ⚪ Optional | `https://example.com/sitemap_index.xml` | Defaults to `${TARGET_BASE_URL}/sitemap.xml` |
+
+**Note**: These are **GitHub repository secrets** used by the CI workflow. They are separate from Vercel environment variables (except `CI_UPLOAD_SIGNING_KEY` and `TARGET_BASE_URL` which must be set in both locations with identical values).
 
 ## Step 2: Enable the Workflow
 
@@ -65,15 +122,19 @@ The workflow runs automatically at 2 AM UTC every day.
 
 ### Option C: Trigger from Dashboard
 
-Set up these additional environment variables in Vercel:
+To enable the "Trigger Scan" button in your dashboard UI, add these **Vercel environment variables**:
 
-```bash
-GITHUB_TOKEN=ghp_your_personal_access_token
-GITHUB_REPO_OWNER=your-username-or-org
-GITHUB_REPO_NAME=your-repo-name
-```
+**In Vercel Project Settings → Environment Variables**:
 
-Then you can trigger scans from the dashboard UI.
+| Variable               | Example             | Purpose                                         |
+|------------------------|---------------------|-------------------------------------------------|
+| `GITHUB_TOKEN`         | `ghp_...`           | Personal Access Token with `repo` scope         |
+| `GITHUB_REPO_OWNER`    | `your-username`     | Your GitHub username or organization            |
+| `GITHUB_REPO_NAME`     | `lighthouse-public` | Your forked repository name                     |
+
+**Important**: These are Vercel env vars, NOT GitHub Secrets. They enable manual scan triggering from the dashboard.
+
+Then you can trigger scans from the dashboard UI using the "Trigger Scan" button.
 
 ## Optional: Slack Notifications
 

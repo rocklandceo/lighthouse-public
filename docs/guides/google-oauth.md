@@ -33,13 +33,28 @@ This guide walks you through setting up Google OAuth for the Lighthouse SEO Dash
 
 1. In the left sidebar, go to **APIs & Services** → **Credentials**
 2. Click **Create Credentials** → **OAuth client ID**
-3. Select **Web application** as the application type
-4. Enter a name (e.g., "Lighthouse Dashboard Web Client")
-5. Under **Authorized redirect URIs**, add:
-   - `https://YOUR-VERCEL-URL/api/auth/callback/google` (production)
-   - `http://localhost:3000/api/auth/callback/google` (local development)
-6. Click **Create**
-7. Copy the **Client ID** and **Client Secret**
+3. If prompted, configure the OAuth consent screen first (see Step 2)
+4. Select **Web application** as the application type
+5. Enter a name (e.g., "Lighthouse Dashboard Web Client")
+
+6. Under **Authorized JavaScript origins**, click **Add URI** and add:
+   - `https://YOUR-VERCEL-URL` (production - replace with your actual Vercel URL)
+   - `http://localhost:3000` (local development - optional, add if developing locally)
+
+7. Under **Authorized redirect URIs**, click **Add URI** and add:
+   - `https://YOUR-VERCEL-URL/api/auth/callback/google` (production - **must match exactly**)
+   - `http://localhost:3000/api/auth/callback/google` (local development - **must match exactly**)
+
+   **⚠️ Critical**: Replace `YOUR-VERCEL-URL` with your actual URL (e.g., `my-dashboard.vercel.app`)
+   - ✅ Correct: `https://my-dashboard.vercel.app/api/auth/callback/google`
+   - ❌ Wrong: `https://my-dashboard.vercel.app` (missing path)
+   - ❌ Wrong: `https://my-dashboard.vercel.app/api/auth/callback/google/` (trailing slash)
+
+8. Click **Create**
+9. A popup will show your credentials - **copy both values**:
+   - **Client ID**: Ends with `.apps.googleusercontent.com`
+   - **Client Secret**: Starts with `GOCSPX-`
+10. Save these securely - you'll need them for Vercel configuration
 
 ## Step 4: Add to Environment Variables
 

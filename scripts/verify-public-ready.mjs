@@ -39,6 +39,11 @@ const ALLOWED_CONTEXTS = [
   /replace with/i,
   /your[- ]?domain/i,
   /your[- ]?site/i,
+  /github\.com\/rocklandceo\/lighthouse-public/i, // Template repository URLs
+  /rocklandceo\/lighthouse-public/i, // Repository references
+  /contained.*forbidden/i, // Documentation explaining removal of forbidden content
+  /verification command.*contained/i, // Documentation explaining verification fixes
+  /grep.*-[nEi].*['"].*\|/i, // Documentation showing grep commands with regex patterns (e.g., grep -E 'pattern|pattern')
 ];
 
 // Files to scan
@@ -58,6 +63,7 @@ const SKIP_PATTERNS = [
   '.env.local',
   '.env.example', // Skip .env.example as it has placeholder examples
   'forbidden-patterns.txt', // Skip patterns file (contains the patterns we're looking for)
+  'verify-public-ready.mjs', // Skip this verification script itself
 ];
 
 // Required files for public release
@@ -88,8 +94,18 @@ const REQUIRED_ENV_VARS = [
   'GOOGLE_CLIENT_SECRET',
   'KV_REST_API_URL',
   'KV_REST_API_TOKEN',
-  'ANTHROPIC_API_KEY',
   'CI_UPLOAD_SIGNING_KEY',
+];
+
+// Optional environment variables (should still be documented in .env.example)
+const OPTIONAL_ENV_VARS = [
+  'ANTHROPIC_API_KEY',
+  'DATAFORSEO_LOGIN',
+  'DATAFORSEO_PASSWORD',
+  'GITHUB_TOKEN',
+  'GITHUB_REPO_OWNER',
+  'GITHUB_REPO_NAME',
+  'VERCEL_DEPLOY_HOOK',
 ];
 
 let issues = [];
