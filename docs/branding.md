@@ -1,5 +1,19 @@
 # Branding Customization Guide
 
+## When to Use This Guide
+
+**From the main README**: You're here from the Advanced Configuration section.
+
+**Purpose**: This guide provides detailed walkthrough for customizing the dashboard's appearance, including colors, logo, and branding. The README mentions basic branding - this guide has the full details.
+
+**Prerequisites**:
+- ✅ You've completed the main setup (Steps 1-18 in README.md)
+- ✅ Your dashboard is deployed and working
+
+**After completing this guide**: Your dashboard will display your custom branding.
+
+---
+
 Make the dashboard your own with custom colors, logo, and branding.
 
 ## Quick Start
@@ -23,6 +37,31 @@ NEXT_PUBLIC_BRAND_ACCENT="#d97706"
 | `NEXT_PUBLIC_BRAND_ACCENT` | Highlights and interactive elements | `#B45309` |
 | `NEXT_PUBLIC_BRAND_BACKGROUND` | Page background color | `#FAF7F2` |
 | `NEXT_PUBLIC_BRAND_TEXT` | Main text color | `#0B3D91` |
+
+<details>
+<summary><strong>Understanding the public/ Directory</strong></summary>
+
+**What is the public/ directory?**
+
+In Next.js (the framework this dashboard uses), the `public/` folder is a special directory where you place static files like images, icons, and fonts. Files in this directory are served directly from your website's root URL.
+
+**How paths work:**
+
+- A file at `public/brand/logo.svg` becomes accessible at `https://your-site.com/brand/logo.svg`
+- In environment variables, you reference files starting with `/` (the root)
+- The `public/` part is NOT included in the path - just what comes after
+
+**Examples:**
+
+| File Location | Environment Variable Value |
+|---------------|---------------------------|
+| `public/brand/logo.svg` | `/brand/logo.svg` |
+| `public/my-logo.png` | `/my-logo.png` |
+| `public/images/favicon.ico` | `/images/favicon.ico` |
+
+**Common mistake:** Don't use `public/brand/logo.svg` as the value - use `/brand/logo.svg` (without the `public/` prefix).
+
+</details>
 
 ## Custom Logo
 
@@ -59,6 +98,14 @@ NEXT_PUBLIC_BRAND_ACCENT="#d97706"
    ```
 
 ## Color Schemes
+
+Colors use **hex format** (e.g., `#1a365d`). Need help choosing colors? Try these free tools:
+
+- **[Coolors](https://coolors.co/)** - Generate color palettes
+- **[HTML Color Picker](https://www.w3schools.com/colors/colors_picker.asp)** - Pick individual colors
+- **[Contrast Checker](https://webaim.org/resources/contrastchecker/)** - Ensure text is readable
+
+> **Tip**: Always test that your text colors have sufficient contrast against background colors for accessibility.
 
 ### Professional Blue (Default)
 

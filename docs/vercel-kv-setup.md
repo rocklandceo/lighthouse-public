@@ -1,5 +1,21 @@
 # Vercel KV Storage Setup Guide
 
+## When to Use This Guide
+
+**From the main README**: You're here from Step 13 (Deploy to Vercel, Part B).
+
+**Purpose**: This guide provides detailed walkthrough for setting up Vercel KV database storage. The README has quick steps in Step 13 Part B - this guide has the full details and troubleshooting.
+
+**Prerequisites**:
+
+- ✅ You've completed Steps 1-12 of the README (accounts created, .env configured, validation passed)
+- ✅ You've started Step 13 Part A (Initial Vercel deployment)
+- ✅ You have a Vercel project (even if deployment failed)
+
+**After completing this guide**: Return to README Step 13 Part C to verify environment variables, then continue with Step 14.
+
+---
+
 This guide shows how to add Vercel KV (powered by Upstash Redis) to your project using the Vercel Marketplace.
 
 ---
@@ -112,6 +128,27 @@ After redeployment completes:
 4. Verify data appears in the dashboard
 
 **If data appears**, your KV storage is working correctly!
+
+---
+
+## How to Reconnect KV (If Disconnected)
+
+If your KV database becomes disconnected or environment variables are missing, follow these steps:
+
+1. Go to your Vercel project dashboard
+2. Click the **Storage** tab
+3. Click on your KV database (e.g., `lighthouse-kv`)
+4. Look for **Environment Variables** or **Connection** section
+5. Click **Connect** or **Link to Project**
+6. Select your project if prompted
+7. Click **Connect** to confirm
+8. Go to **Settings** → **Environment Variables**
+9. Verify these variables now appear:
+   - `KV_REST_API_URL` - starts with `https://`
+   - `KV_REST_API_TOKEN` - long alphanumeric string
+10. **Redeploy** your application (required for new env vars to take effect)
+
+**Tip**: After reconnecting, allow 1-2 minutes for environment variables to propagate before redeploying.
 
 ---
 

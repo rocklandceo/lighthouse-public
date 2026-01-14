@@ -15,7 +15,7 @@
     "setup:secrets": "bash scripts/generate-secrets.sh",
     "setup:secrets:windows": "powershell -ExecutionPolicy Bypass -File scripts/generate-secrets.ps1",
     "setup:validate": "node scripts/validate-setup.mjs",
-    "setup:help": "echo '📋 Setup Progress Tracker: docs/SETUP-CREDENTIALS.md' && echo '📖 Complete Setup Guide: README.md' && echo '🔧 Generate secrets: npm run setup:secrets (Mac/Linux) or npm run setup:secrets:windows' && echo '✅ Validate setup: npm run setup:validate'",
+    "setup:help": "echo '📖 Complete Setup Guide: README.md' && echo '🔧 Generate secrets: npm run setup:secrets (Mac/Linux) or npm run setup:secrets:windows' && echo '✅ Validate setup: npm run setup:validate'",
     "urls": "node scripts/extract-urls.mjs",
     "scan": "node scripts/scan.mjs",
     "scan:mobile": "node scripts/scan.mjs mobile",

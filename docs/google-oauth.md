@@ -9,6 +9,7 @@
 **Prerequisites**:
 - ✅ You've completed Steps 1-2 of the README (forked repo, created .env file)
 - ✅ Your `.env` file is open in your editor
+- ✅ Credit card available for Google Cloud verification (no charges - just verification)
 
 **After completing this guide**: Return to the README and continue with Step 10.
 
@@ -27,31 +28,72 @@ Google Cloud Console is where you configure OAuth authentication (Sign in with G
 
 ---
 
-## Part 1: Create Google Cloud Account (If Needed)
+## ⏰ Timing Note - Two-Step Process
 
-### If You Already Have a Google Account
+**This is a two-step process** - don't worry if you can't complete everything in one sitting:
 
-Skip to [Part 2: Create Google Cloud Project](#part-2-create-google-cloud-project)
+| Step | When | What You'll Do |
+|------|------|----------------|
+| **Step 1** | NOW | Create OAuth credentials and leave redirect URIs blank |
+| **Step 2** | AFTER Vercel deployment | Come back and add your actual Vercel URL |
 
-### If You Need to Create a Google Account
-
-1. Go to [accounts.google.com](https://accounts.google.com/signup)
-2. Click **Create account** → **For my personal use** (or **For work or my business** if preferred)
-3. Fill in your information:
-   - First and last name
-   - Email address (choose your Gmail address)
-   - Password (strong password recommended)
-   - Phone number (for account recovery)
-4. Click **Next**
-5. Verify your phone number via SMS or call
-6. Accept Google's Terms of Service and Privacy Policy
-7. Click **Create account**
-
-**You now have a Google account** - this same account works for Gmail, Google Cloud, Google Analytics, and all Google services.
+**Why the delay?** You can't add the real redirect URL yet because you don't have a Vercel URL until you deploy (Step 13 in README). This is expected and normal. The credentials will work once you add the redirect URI after deployment.
 
 ---
 
-## Part 2: Create Google Cloud Project
+<details>
+<summary><strong>Don't have a Google account yet? Click here for step-by-step instructions</strong></summary>
+
+A Google account is required for:
+- Google OAuth (dashboard sign-in)
+- Google Analytics 4
+- Google Search Console
+- Google Cloud Console (OAuth setup)
+
+**Estimated Time**: 5 minutes
+
+### Instructions
+
+1. Go to [accounts.google.com/signup](https://accounts.google.com/signup)
+
+2. Click **Create account** → Select:
+   - **For my personal use** (personal dashboard)
+   - **For work or my business** (company dashboard)
+
+3. Fill in your information:
+   - **First and last name**: Your real name (displayed in dashboard)
+   - **Email address**: Choose your Gmail address (e.g., `yourname@gmail.com`)
+   - **Password**: Create a strong password (at least 12 characters)
+
+4. Click **Next**
+
+5. **Verify your phone number** (required):
+   - Enter your phone number
+   - Choose verification method: **Text message (SMS)** or **Voice call**
+   - Enter the 6-digit code you receive
+   - Click **Verify**
+
+6. **Optional information** (you can skip these):
+   - Recovery email address (recommended for account recovery)
+   - Date of birth
+   - Gender
+
+7. Click **Next**
+
+8. **Accept Google's Terms of Service and Privacy Policy**:
+   - Read the terms (or skim them)
+   - Scroll to bottom
+   - Click **I agree**
+
+9. **You now have a Google account!**
+
+**Important**: This same account works for Gmail, Google Cloud, Google Analytics, Google Search Console, and all Google services. You don't need separate accounts for each service.
+
+</details>
+
+---
+
+## Part 1: Create Google Cloud Project
 
 ### First Time at Google Cloud Console?
 
@@ -86,61 +128,23 @@ If this is your first time visiting Google Cloud Console, you may be prompted to
 
 ---
 
-## Part 3: Configure OAuth Consent Screen
+## Part 2: Configure OAuth Consent Screen
 
-**What is this?** The OAuth consent screen is what users see when they click "Sign in with Google" on your dashboard. You're configuring the branding and information displayed.
+1. In the left sidebar, navigate to **APIs & Services** → **OAuth consent screen**
+2. Select **External** → Click **Create**
+3. Fill in required fields:
+   - **App name**: Your dashboard name (e.g., "Lighthouse SEO Dashboard")
+   - **User support email**: Your email
+   - **Developer contact email**: Your email
+   - Leave optional fields blank
+4. Click **Save and Continue** through all screens (Scopes, Test Users, Review)
+5. Click **Back to Dashboard**
 
-1. In the left sidebar, click the menu icon (☰) if needed
-2. Navigate to **APIs & Services** → **OAuth consent screen**
-3. You'll see two options:
-   - **Internal**: Only for Google Workspace organizations (you probably don't have this)
-   - **External**: For anyone with a Google account
-4. Select **External**
-5. Click **Create**
-
-### Fill in OAuth Consent Screen
-
-1. **App Information**:
-   - **App name**: Enter your dashboard name (e.g., "Lighthouse SEO Dashboard" or "My Company SEO Monitor")
-   - **User support email**: Select your email from dropdown
-   - **App logo** (optional): You can skip this for now
-
-2. **App Domain** (optional):
-   - You can leave these blank for now
-   - Add later once you have a custom domain
-
-3. **Authorized domains** (optional):
-   - Leave blank for now
-
-4. **Developer contact information**:
-   - **Email addresses**: Enter your email address
-   - This is where Google will contact you about the app
-
-5. Click **Save and Continue**
-
-### Scopes Configuration
-
-1. You'll see the "Scopes" page
-2. Click **Save and Continue** (no additional scopes needed - default scopes are sufficient)
-
-### Test Users (Optional)
-
-1. You'll see the "Test users" page
-2. You can skip this - your app is "external" so any Google account can sign in
-3. Click **Save and Continue**
-
-### Review and Confirm
-
-1. Review your OAuth consent screen configuration
-2. Click **Back to Dashboard**
-
-**OAuth Consent Screen Configured!** You should see "Publishing status: Testing" - this is normal and fine for your use case.
+You should see "Publishing status: Testing" - this is normal for private use.
 
 ---
 
-## Part 4: Create OAuth Credentials
-
-**What are OAuth credentials?** These are the Client ID and Client Secret that allow your dashboard to authenticate users via Google.
+## Part 3: Create OAuth Credentials
 
 1. In the left sidebar, navigate to **APIs & Services** → **Credentials**
 2. At the top of the page, click **+ Create Credentials**
@@ -163,14 +167,10 @@ If this is your first time visiting Google Cloud Console, you may be prompted to
    - Or `https://lighthouse.yourdomain.com` (if using custom domain)
 
 4. **Authorized redirect URIs** ⚠️ **CRITICAL**:
-   - Click **+ Add URI**
-   - This MUST match your dashboard URL exactly
-   - **For now, enter a placeholder** - you'll update this after deployment
+   - **Leave blank for now** - you don't have a Vercel URL yet
+   - You'll come back and add this after deploying to Vercel (Step 15 in README)
 
-   **Placeholder** (use this for now):
-   - `https://PLACEHOLDER.vercel.app/api/auth/callback/google`
-
-   **After deployment** (Step 11 in README), you'll come back and update this to:
+   **After deployment** (Step 15 in README), you'll add:
    - `https://your-actual-project.vercel.app/api/auth/callback/google`
    - Or `https://lighthouse.yourdomain.com/api/auth/callback/google` (custom domain)
 
@@ -212,22 +212,23 @@ GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=GOCSPX-your-client-secret
 ```
 
-**Save the file** (Ctrl+S / Cmd+S) - you'll upload these to Vercel in Step 12 of the main README.
+**Save the file** (Ctrl+S / Cmd+S) - you'll upload these to Vercel in Step 14 of the main README.
 
 ---
 
-## Part 5: Update Redirect URI After Deployment
+## Part 4: Add Redirect URI After Deployment
 
-**⚠️ IMPORTANT**: After you deploy to Vercel (Step 11 in main README), you MUST come back and update the redirect URI.
+**⚠️ RETURNING FROM STEP 10**: Remember when you left the redirect URI blank? Now that you have your Vercel URL from Step 13, it's time to add it.
 
-1. Deploy your dashboard to Vercel (follow main README)
+1. Deploy your dashboard to Vercel (follow main README Steps 11-13)
 2. Note your Vercel URL (e.g., `your-project-abc123.vercel.app`)
 3. Return to [Google Cloud Console](https://console.cloud.google.com/)
 4. Go to **APIs & Services** → **Credentials**
 5. Click on your OAuth 2.0 Client ID name
-6. Under **Authorized redirect URIs**, remove the placeholder
-7. Click **+ Add URI** and enter your actual URL:
+6. Under **Authorized redirect URIs**, click **+ Add URI**
+7. Enter your actual URL:
    - `https://your-actual-project.vercel.app/api/auth/callback/google`
+   - **Important**: No trailing slash, must be exact match
 8. Click **Save**
 9. Wait 1-2 minutes for changes to propagate
 
@@ -238,7 +239,7 @@ GOOGLE_CLIENT_SECRET=GOCSPX-your-client-secret
 
 ---
 
-## Part 6: Verify Setup
+## Part 5: Verify Setup
 
 After deploying to Vercel and updating the redirect URI, test your OAuth setup:
 
@@ -252,7 +253,7 @@ After deploying to Vercel and updating the redirect URI, test your OAuth setup:
 8. You should now be signed in and see your email/profile
 
 **If you see "redirect_uri_mismatch" error**:
-- Go back to Part 5 and verify the redirect URI matches exactly
+- Go back to Part 4 and verify the redirect URI matches exactly
 - Check for typos, trailing slashes, or http vs https
 - Wait 1-2 minutes after making changes
 

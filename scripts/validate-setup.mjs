@@ -115,7 +115,7 @@ console.log('━━━━━━━━━━━━━━━━━━━━━━�
 if (hasErrors) {
   console.log('❌ VALIDATION FAILED');
   console.log('   Fix the missing required variables before deploying.\n');
-  console.log('📋 Use docs/SETUP-CREDENTIALS.md to track your progress');
+  console.log('📋 Follow the README.md setup guide');
   console.log('');
   process.exit(1);
 } else {
@@ -126,7 +126,7 @@ if (hasErrors) {
   console.log('   2. Add CI_UPLOAD_SIGNING_KEY and TARGET_BASE_URL to GitHub Secrets');
   console.log('   3. Use IDENTICAL values in both locations');
   console.log('');
-  console.log('📋 Track your deployment progress in docs/SETUP-CREDENTIALS.md');
+  console.log('📋 Continue following README.md');
   console.log('');
   process.exit(0);
 }

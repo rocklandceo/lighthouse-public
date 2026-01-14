@@ -1,5 +1,21 @@
 # Custom Domain Setup Guide
 
+## When to Use This Guide
+
+**From the main README**: You're here from Part 4 (Optional Custom Domain) or the Additional Guides section.
+
+**Purpose**: This guide provides detailed walkthrough for setting up a custom subdomain (e.g., `lighthouse.yourcompany.com`) instead of using the default Vercel URL. The README has a quick summary - this guide has the full details.
+
+**Prerequisites**:
+
+- ✅ You've completed Steps 1-18 of the README (dashboard deployed and working on Vercel)
+- ✅ You own a domain and can add DNS records
+- ✅ Your Vercel deployment is successful
+
+**After completing this guide**: Your dashboard will be accessible at your custom subdomain (e.g., `https://lighthouse.yourcompany.com`).
+
+---
+
 This guide shows how to use a custom subdomain (e.g., `lighthouse.example.com`) instead of the default Vercel URL (`your-project-abc123.vercel.app`).
 
 **Estimated Time**: 15-20 minutes (including DNS propagation)
@@ -46,6 +62,30 @@ This guide shows how to use a custom subdomain (e.g., `lighthouse.example.com`) 
 - Using your root domain (`yourdomain.com`) - keep that for your main site
 - Special characters or numbers
 - Overly long names
+
+---
+
+<details>
+<summary><strong>DNS Basics for Beginners</strong></summary>
+
+**What is DNS?** DNS (Domain Name System) is like a phone book for the internet. It translates domain names (like `example.com`) into IP addresses that computers understand.
+
+**What is a CNAME record?** A CNAME (Canonical Name) record points your subdomain to another domain. When you create a CNAME pointing `lighthouse.example.com` to `cname.vercel-dns.com`, you're telling the internet: "When someone visits `lighthouse.example.com`, send them to Vercel's servers."
+
+**Why use a subdomain?** A subdomain is a prefix added to your domain (like `lighthouse.example.com`). This lets you have multiple sites on one domain:
+- `www.example.com` → Your main website
+- `lighthouse.example.com` → Your Lighthouse dashboard
+- `blog.example.com` → Your blog
+
+**What is DNS propagation?** When you add or change a DNS record, it takes time for the change to spread across all DNS servers worldwide. This is called "propagation" and typically takes 5-30 minutes, but can take up to 48 hours in rare cases.
+
+**Where do I manage DNS?** Usually at your domain registrar (where you bought the domain) or your DNS provider (like Cloudflare). Common places:
+- **GoDaddy**: My Products → Domains → DNS
+- **Namecheap**: Domain List → Manage → Advanced DNS
+- **Cloudflare**: Select domain → DNS
+- **Google Domains**: My Domains → Manage → DNS
+
+</details>
 
 ---
 
@@ -424,7 +464,7 @@ After setting up your custom domain:
 2. ✅ Share new URL with team
 3. ✅ Update documentation references
 4. ✅ Test all features work
-5. → Continue with [Final Verification](../SETUP-CREDENTIALS.md#phase-10-verify-setup)
+5. → Return to [README.md](../README.md) to verify setup
 
 ---
 
