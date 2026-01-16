@@ -47,8 +47,11 @@ const requiredVars = [
   { name: 'GOOGLE_ANALYTICS_PROPERTY_ID', example: 'properties/123456789' },
   { name: 'GOOGLE_SERVICE_ACCOUNT_JSON', example: '(JSON object from service account)' },
   { name: 'ANTHROPIC_API_KEY', example: 'sk-ant-... (from console.anthropic.com)' },
+  { name: 'AI_MODEL', example: 'claude-3-5-haiku-20241022' },
   { name: 'DATAFORSEO_LOGIN', example: '(from dataforseo.com)' },
   { name: 'DATAFORSEO_PASSWORD', example: '(from dataforseo.com)' },
+  { name: 'DATAFORSEO_LOCATION_CODE', example: '2840' },
+  { name: 'DATAFORSEO_LANGUAGE_CODE', example: 'en' },
   { name: 'CI_UPLOAD_SIGNING_KEY', example: '(generated via bash scripts/generate-secrets.sh)' },
 ];
 
@@ -94,6 +97,7 @@ const optionalVars = [
   { name: 'ALLOWED_EMAIL_DOMAIN', feature: 'Email domain restriction for sign-in' },
   { name: 'APP_NAME', feature: 'Custom dashboard branding' },
   { name: 'SITE_DESCRIPTION', feature: 'Custom dashboard branding' },
+  { name: 'REPORTS_MAX_RUNS', feature: 'Maximum report runs stored in KV (default: 30)' },
 ];
 
 optionalVars.forEach(check => {

@@ -97,18 +97,21 @@ Claude analyzes your Lighthouse scores, competitor data, and site metrics to pro
 
 ### Add to Your .env File
 
-Open your `.env` file and add this line:
+Open your `.env` file and add these lines:
 
 ```bash
 # Anthropic API Key for AI Insights
 ANTHROPIC_API_KEY=sk-ant-api03-your-actual-key-here
+
+# Anthropic model name (must match the required value in .env.example)
+AI_MODEL=claude-3-5-haiku-20241022
 ```
 
 Replace `sk-ant-api03-your-actual-key-here` with your actual API key.
 
 **Save the file** - you'll upload this to Vercel in Step 14 of the main README.
 
-**✅ Verify Success**: Your `.env` file should have a line starting with `ANTHROPIC_API_KEY=sk-ant-`
+**✅ Verify Success**: Your `.env` file should include both `ANTHROPIC_API_KEY` and `AI_MODEL` with non-empty values.
 
 ---
 

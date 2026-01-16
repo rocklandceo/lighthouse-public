@@ -57,6 +57,13 @@ CLAUDE.md
 .continue/
 .copilot/
 .taskmaster/
+.roorules
+.rurules
+*.rules
+
+# Internal working documents (audit, planning)
+plans/
+docs/clean-room.md
 
 # Generated Lighthouse reports (created by CI)
 public/reports/

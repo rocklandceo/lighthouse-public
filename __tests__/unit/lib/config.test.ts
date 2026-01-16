@@ -29,12 +29,22 @@ describe('lib/config', () => {
     it('loads config successfully with all required variables', async () => {
       // Set all required environment variables
       process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.TARGET_DOMAIN = 'example.com';
       process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_URL = 'https://dashboard.example.com';
       process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
       process.env.KV_REST_API_URL = 'https://kv.example.com';
       process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.ANTHROPIC_API_KEY = 'test-api-key';
+      process.env.AI_MODEL = 'claude-3-5-haiku-20241022';
+      process.env.DATAFORSEO_LOGIN = 'test-login';
+      process.env.DATAFORSEO_PASSWORD = 'test-password';
+      process.env.DATAFORSEO_LOCATION_CODE = '2840';
+      process.env.DATAFORSEO_LANGUAGE_CODE = 'en';
+      process.env.GOOGLE_ANALYTICS_PROPERTY_ID = 'properties/123456789';
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = '{"type":"service_account","client_email":"test@example.com","private_key":"test"}';
 
       const { loadConfig } = await import('@/lib/config');
       const config = loadConfig();
@@ -46,12 +56,22 @@ describe('lib/config', () => {
 
     it('extracts domain from URL correctly', async () => {
       process.env.TARGET_BASE_URL = 'https://www.example.com/path';
+      process.env.TARGET_DOMAIN = 'example.com';
       process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_URL = 'https://dashboard.example.com';
       process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
       process.env.KV_REST_API_URL = 'https://kv.example.com';
       process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.ANTHROPIC_API_KEY = 'test-api-key';
+      process.env.AI_MODEL = 'claude-3-5-haiku-20241022';
+      process.env.DATAFORSEO_LOGIN = 'test-login';
+      process.env.DATAFORSEO_PASSWORD = 'test-password';
+      process.env.DATAFORSEO_LOCATION_CODE = '2840';
+      process.env.DATAFORSEO_LANGUAGE_CODE = 'en';
+      process.env.GOOGLE_ANALYTICS_PROPERTY_ID = 'properties/123456789';
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = '{"type":"service_account","client_email":"test@example.com","private_key":"test"}';
 
       const { loadConfig } = await import('@/lib/config');
       const config = loadConfig();
@@ -62,12 +82,22 @@ describe('lib/config', () => {
 
     it('uses default values for optional variables', async () => {
       process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.TARGET_DOMAIN = 'example.com';
       process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_URL = 'https://dashboard.example.com';
       process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
       process.env.KV_REST_API_URL = 'https://kv.example.com';
       process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.ANTHROPIC_API_KEY = 'test-api-key';
+      process.env.AI_MODEL = 'claude-3-5-haiku-20241022';
+      process.env.DATAFORSEO_LOGIN = 'test-login';
+      process.env.DATAFORSEO_PASSWORD = 'test-password';
+      process.env.DATAFORSEO_LOCATION_CODE = '2840';
+      process.env.DATAFORSEO_LANGUAGE_CODE = 'en';
+      process.env.GOOGLE_ANALYTICS_PROPERTY_ID = 'properties/123456789';
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = '{"type":"service_account","client_email":"test@example.com","private_key":"test"}';
 
       const { loadConfig } = await import('@/lib/config');
       const config = loadConfig();
@@ -79,12 +109,22 @@ describe('lib/config', () => {
 
     it('regression threshold defaults to 10', async () => {
       process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.TARGET_DOMAIN = 'example.com';
       process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_URL = 'https://dashboard.example.com';
       process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
       process.env.KV_REST_API_URL = 'https://kv.example.com';
       process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.ANTHROPIC_API_KEY = 'test-api-key';
+      process.env.AI_MODEL = 'claude-3-5-haiku-20241022';
+      process.env.DATAFORSEO_LOGIN = 'test-login';
+      process.env.DATAFORSEO_PASSWORD = 'test-password';
+      process.env.DATAFORSEO_LOCATION_CODE = '2840';
+      process.env.DATAFORSEO_LANGUAGE_CODE = 'en';
+      process.env.GOOGLE_ANALYTICS_PROPERTY_ID = 'properties/123456789';
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = '{"type":"service_account","client_email":"test@example.com","private_key":"test"}';
 
       const { loadConfig } = await import('@/lib/config');
       const config = loadConfig();
@@ -94,12 +134,22 @@ describe('lib/config', () => {
 
     it('loads optional GitHub configuration', async () => {
       process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.TARGET_DOMAIN = 'example.com';
       process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_URL = 'https://dashboard.example.com';
       process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
       process.env.KV_REST_API_URL = 'https://kv.example.com';
       process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.ANTHROPIC_API_KEY = 'test-api-key';
+      process.env.AI_MODEL = 'claude-3-5-haiku-20241022';
+      process.env.DATAFORSEO_LOGIN = 'test-login';
+      process.env.DATAFORSEO_PASSWORD = 'test-password';
+      process.env.DATAFORSEO_LOCATION_CODE = '2840';
+      process.env.DATAFORSEO_LANGUAGE_CODE = 'en';
+      process.env.GOOGLE_ANALYTICS_PROPERTY_ID = 'properties/123456789';
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = '{"type":"service_account","client_email":"test@example.com","private_key":"test"}';
       process.env.GITHUB_TOKEN = 'ghp_test_token';
       process.env.GITHUB_REPO_OWNER = 'testuser';
       process.env.GITHUB_REPO_NAME = 'testrepo';
@@ -116,12 +166,22 @@ describe('lib/config', () => {
 
     it('returns null for missing GitHub configuration', async () => {
       process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.TARGET_DOMAIN = 'example.com';
       process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_URL = 'https://dashboard.example.com';
       process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
       process.env.KV_REST_API_URL = 'https://kv.example.com';
       process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.ANTHROPIC_API_KEY = 'test-api-key';
+      process.env.AI_MODEL = 'claude-3-5-haiku-20241022';
+      process.env.DATAFORSEO_LOGIN = 'test-login';
+      process.env.DATAFORSEO_PASSWORD = 'test-password';
+      process.env.DATAFORSEO_LOCATION_CODE = '2840';
+      process.env.DATAFORSEO_LANGUAGE_CODE = 'en';
+      process.env.GOOGLE_ANALYTICS_PROPERTY_ID = 'properties/123456789';
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = '{"type":"service_account","client_email":"test@example.com","private_key":"test"}';
 
       const { loadConfig } = await import('@/lib/config');
       const config = loadConfig();
@@ -139,19 +199,30 @@ describe('lib/config', () => {
       vi.resetModules();
       // Set minimum required variables for config to load
       process.env.TARGET_BASE_URL = 'https://example.com';
+      process.env.TARGET_DOMAIN = 'example.com';
       process.env.DASHBOARD_URL = 'https://dashboard.example.com';
+      process.env.NEXTAUTH_URL = 'https://dashboard.example.com';
       process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-chars-long';
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
       process.env.KV_REST_API_URL = 'https://kv.example.com';
       process.env.KV_REST_API_TOKEN = 'test-kv-token';
+      process.env.ANTHROPIC_API_KEY = 'test-api-key';
+      process.env.AI_MODEL = 'claude-3-5-haiku-20241022';
+      process.env.DATAFORSEO_LOGIN = 'test-login';
+      process.env.DATAFORSEO_PASSWORD = 'test-password';
+      process.env.DATAFORSEO_LOCATION_CODE = '2840';
+      process.env.DATAFORSEO_LANGUAGE_CODE = 'en';
+      process.env.GOOGLE_ANALYTICS_PROPERTY_ID = 'properties/123456789';
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = '{"type":"service_account","client_email":"test@example.com","private_key":"test"}';
       // Explicitly unset optional keys
-      delete process.env.ANTHROPIC_API_KEY;
-      delete process.env.DATAFORSEO_LOGIN;
-      delete process.env.DATAFORSEO_PASSWORD;
+      delete process.env.ALLOWED_EMAIL_DOMAIN;
+      delete process.env.APP_NAME;
+      delete process.env.SITE_DESCRIPTION;
     });
 
     it('isAIEnabled returns false when API key not set', async () => {
+      delete process.env.ANTHROPIC_API_KEY;
       const { isAIEnabled } = await import('@/lib/config');
       expect(isAIEnabled()).toBe(false);
     });
@@ -163,6 +234,8 @@ describe('lib/config', () => {
     });
 
     it('isCompetitorAnalysisEnabled returns false when credentials not set', async () => {
+      delete process.env.DATAFORSEO_LOGIN;
+      delete process.env.DATAFORSEO_PASSWORD;
       const { isCompetitorAnalysisEnabled } = await import('@/lib/config');
       expect(isCompetitorAnalysisEnabled()).toBe(false);
     });

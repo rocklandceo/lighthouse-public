@@ -9,8 +9,7 @@
  * Environment variables:
  * - DASHBOARD_URL: The base URL of the dashboard (required)
  * - TARGET_BASE_URL: The base URL of the target site (required)
- * - CI_UPLOAD_SIGNING_KEY: HMAC signing key for secure uploads (recommended)
- * - CI_UPLOAD_SECRET: Legacy Bearer token for uploads (deprecated fallback)
+ * - CI_UPLOAD_SIGNING_KEY: HMAC signing key for secure uploads (required)
  */
 
 import fs from 'fs';
@@ -187,54 +186,26 @@ async function uploadWithHmac(uploadUrl, data, signingKey) {
 }
 
 /**
- * Upload reports to the dashboard API with legacy Bearer token
- */
-async function uploadWithBearer(uploadUrl, data, uploadSecret) {
-  console.log('⚠️  Using legacy Bearer token authentication');
-  console.log('   Consider upgrading to HMAC signatures by setting CI_UPLOAD_SIGNING_KEY');
-
-  const response = await fetch(uploadUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${uploadSecret}`,
-    },
-    body: JSON.stringify(data),
-  });
-
-  return response;
-}
-
 /**
  * Upload reports to the dashboard API
  */
 async function uploadReports(data) {
   const dashboardUrl = process.env.DASHBOARD_URL;
   const signingKey = process.env.CI_UPLOAD_SIGNING_KEY;
-  const uploadSecret = process.env.CI_UPLOAD_SECRET;
 
   if (!dashboardUrl) {
     throw new Error('DASHBOARD_URL environment variable is required');
   }
 
-  if (!signingKey && !uploadSecret) {
-    throw new Error(
-      'Either CI_UPLOAD_SIGNING_KEY (recommended) or CI_UPLOAD_SECRET is required'
-    );
+  if (!signingKey) {
+    throw new Error('CI_UPLOAD_SIGNING_KEY is required');
   }
 
   const uploadUrl = `${dashboardUrl}/api/reports/upload`;
 
   console.log(`Uploading reports to ${uploadUrl}...`);
 
-  let response;
-
-  // Prefer HMAC signature if available
-  if (signingKey) {
-    response = await uploadWithHmac(uploadUrl, data, signingKey);
-  } else {
-    response = await uploadWithBearer(uploadUrl, data, uploadSecret);
-  }
+  const response = await uploadWithHmac(uploadUrl, data, signingKey);
 
   if (!response.ok) {
     const errorText = await response.text();

@@ -391,7 +391,27 @@ export async function getCachedKeywordIdeas(
 // ============================================
 
 // Report storage settings
-const REPORTS_MAX_RUNS = 30; // Keep last 30 runs
+const REPORTS_MAX_RUNS_DEFAULT = 30;
+const REPORTS_MAX_RUNS_MIN = 1;
+const REPORTS_MAX_RUNS_MAX = 365;
+
+export function getReportsMaxRunsFromEnv(): number {
+  const raw = process.env.REPORTS_MAX_RUNS;
+  if (!raw) return REPORTS_MAX_RUNS_DEFAULT;
+
+  const parsed = Number(raw);
+  if (!Number.isInteger(parsed)) {
+    throw new Error('REPORTS_MAX_RUNS must be an integer.');
+  }
+  if (parsed < REPORTS_MAX_RUNS_MIN || parsed > REPORTS_MAX_RUNS_MAX) {
+    throw new Error(
+      `REPORTS_MAX_RUNS must be between ${REPORTS_MAX_RUNS_MIN} and ${REPORTS_MAX_RUNS_MAX}.`
+    );
+  }
+  return parsed;
+}
+
+const REPORTS_MAX_RUNS = getReportsMaxRunsFromEnv();
 const REPORTS_TTL = 60 * 60 * 24 * 60; // 60 days retention
 
 // Report cache keys

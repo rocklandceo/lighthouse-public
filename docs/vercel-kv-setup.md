@@ -338,7 +338,7 @@ For 99% of users, the free tier is sufficient.
 ### Data Retention
 
 - **Automatic cleanup**: Old scan results are automatically deleted after 60 days
-- **Configurable limits**: `REPORTS_MAX_RUNS` controls how many runs to keep (default: 30)
+- **Run history cap**: The dashboard keeps the most recent runs in KV storage (default: 30). You can override this with `REPORTS_MAX_RUNS` (range: 1–365).
 - **Manual cleanup**: You can manually delete keys in Upstash Console if needed
 
 ### Best Practices

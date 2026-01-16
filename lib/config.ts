@@ -51,37 +51,31 @@ export interface KVConfig {
 
 export interface AIConfig {
   /** Anthropic API key */
-  apiKey: string | null;
+  apiKey: string;
   /** Model to use for AI insights */
   model: string;
 }
 
 export interface CompetitorConfig {
   /** DataForSEO login */
-  dataForSeoLogin: string | null;
+  dataForSeoLogin: string;
   /** DataForSEO password */
-  dataForSeoPassword: string | null;
-  /** DataForSEO location code (default: 2840 = USA) */
+  dataForSeoPassword: string;
+  /** DataForSEO location code */
   locationCode: number;
-  /** DataForSEO language code (default: 'en' = English) */
+  /** DataForSEO language code */
   languageCode: string;
 }
 
 export interface AnalyticsConfig {
   /** Google Analytics 4 property ID (e.g., "properties/123456789") */
-  propertyId: string | null;
-  /** Full service account JSON (preferred) */
-  serviceAccountJson: string | null;
-  /** Service account email (fallback) */
-  serviceAccountEmail: string | null;
-  /** Service account private key (fallback) */
-  serviceAccountPrivateKey: string | null;
+  propertyId: string;
+  /** Full service account JSON */
+  serviceAccountJson: string;
 }
 
 export interface CIConfig {
-  /** Legacy upload secret (Bearer token auth) */
-  uploadSecret: string | null;
-  /** HMAC signing key for secure uploads (preferred) */
+  /** HMAC signing key for secure uploads */
   uploadSigningKey: string | null;
 }
 
@@ -138,6 +132,22 @@ function getRequired(name: string, missing: string[]): string {
 }
 
 /**
+ * Get required environment variable as number or add to missing list
+ */
+function getRequiredNumber(name: string, missing: string[]): number {
+  const value = process.env[name];
+  if (!value) {
+    missing.push(name);
+    return 0;
+  }
+  const parsed = parseInt(value, 10);
+  if (isNaN(parsed)) {
+    throw new Error(`CONFIGURATION ERROR: ${name} must be a number.`);
+  }
+  return parsed;
+}
+
+/**
  * Get optional environment variable with default
  */
 function getOptional(name: string, defaultValue: string = ''): string {
@@ -154,18 +164,6 @@ function getOptionalNumber(name: string, defaultValue: number): number {
   return isNaN(parsed) ? defaultValue : parsed;
 }
 
-/**
- * Parse domain from URL
- */
-function extractDomain(url: string): string {
-  try {
-    const parsed = new URL(url);
-    return parsed.hostname.replace(/^www\./, '');
-  } catch {
-    return url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-  }
-}
-
 // ============================================
 // Configuration Loading
 // ============================================
@@ -179,13 +177,22 @@ export function loadConfig(): Config {
 
   // Required variables
   const targetBaseUrl = getRequired('TARGET_BASE_URL', missing);
+  const targetDomain = getRequired('TARGET_DOMAIN', missing);
   const dashboardUrl = getRequired('DASHBOARD_URL', missing);
-  const nextAuthUrl = getOptional('NEXTAUTH_URL', dashboardUrl);
+  const nextAuthUrl = getRequired('NEXTAUTH_URL', missing);
   const nextAuthSecret = getRequired('NEXTAUTH_SECRET', missing);
   const googleClientId = getRequired('GOOGLE_CLIENT_ID', missing);
   const googleClientSecret = getRequired('GOOGLE_CLIENT_SECRET', missing);
   const kvRestApiUrl = getRequired('KV_REST_API_URL', missing);
   const kvRestApiToken = getRequired('KV_REST_API_TOKEN', missing);
+  const anthropicApiKey = getRequired('ANTHROPIC_API_KEY', missing);
+  const aiModel = getRequired('AI_MODEL', missing);
+  const dataForSeoLogin = getRequired('DATAFORSEO_LOGIN', missing);
+  const dataForSeoPassword = getRequired('DATAFORSEO_PASSWORD', missing);
+  const dataForSeoLocationCode = getRequiredNumber('DATAFORSEO_LOCATION_CODE', missing);
+  const dataForSeoLanguageCode = getRequired('DATAFORSEO_LANGUAGE_CODE', missing);
+  const googleAnalyticsPropertyId = getRequired('GOOGLE_ANALYTICS_PROPERTY_ID', missing);
+  const googleServiceAccountJson = getRequired('GOOGLE_SERVICE_ACCOUNT_JSON', missing);
 
   // Fail fast if required variables are missing
   if (missing.length > 0) {
@@ -205,9 +212,6 @@ export function loadConfig(): Config {
 
     throw new Error(message);
   }
-
-  // Derive target domain from URL if not explicitly set
-  const targetDomain = getOptional('TARGET_DOMAIN') || extractDomain(targetBaseUrl);
 
   // Build config object
   const config: Config = {
@@ -231,23 +235,20 @@ export function loadConfig(): Config {
       restApiToken: kvRestApiToken,
     },
     ai: {
-      apiKey: getOptional('ANTHROPIC_API_KEY') || null,
-      model: getOptional('AI_MODEL', 'claude-3-5-haiku-20241022'),
+      apiKey: anthropicApiKey,
+      model: aiModel,
     },
     competitors: {
-      dataForSeoLogin: getOptional('DATAFORSEO_LOGIN') || null,
-      dataForSeoPassword: getOptional('DATAFORSEO_PASSWORD') || null,
-      locationCode: getOptionalNumber('DATAFORSEO_LOCATION_CODE', 2840), // Default: USA
-      languageCode: getOptional('DATAFORSEO_LANGUAGE_CODE', 'en'), // Default: English
+      dataForSeoLogin: dataForSeoLogin,
+      dataForSeoPassword: dataForSeoPassword,
+      locationCode: dataForSeoLocationCode,
+      languageCode: dataForSeoLanguageCode,
     },
     analytics: {
-      propertyId: getOptional('GOOGLE_ANALYTICS_PROPERTY_ID') || null,
-      serviceAccountJson: getOptional('GOOGLE_SERVICE_ACCOUNT_JSON') || null,
-      serviceAccountEmail: getOptional('GOOGLE_SERVICE_ACCOUNT_EMAIL') || null,
-      serviceAccountPrivateKey: getOptional('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY') || null,
+      propertyId: googleAnalyticsPropertyId,
+      serviceAccountJson: googleServiceAccountJson,
     },
     ci: {
-      uploadSecret: getOptional('CI_UPLOAD_SECRET') || null,
       uploadSigningKey: getOptional('CI_UPLOAD_SIGNING_KEY') || null,
     },
     notifications: {
@@ -330,11 +331,7 @@ export function isCompetitorAnalysisEnabled(): boolean {
  */
 export function isAnalyticsEnabled(): boolean {
   const cfg = getConfig();
-  return !!(
-    cfg.analytics.propertyId &&
-    (cfg.analytics.serviceAccountJson ||
-      (cfg.analytics.serviceAccountEmail && cfg.analytics.serviceAccountPrivateKey))
-  );
+  return !!(cfg.analytics.propertyId && cfg.analytics.serviceAccountJson);
 }
 
 /**
@@ -351,12 +348,6 @@ export function isSecureUploadEnabled(): boolean {
   return !!getConfig().ci.uploadSigningKey;
 }
 
-/**
- * Check if legacy upload (Bearer token) is available
- */
-export function isLegacyUploadEnabled(): boolean {
-  return !!getConfig().ci.uploadSecret;
-}
 
 /**
  * Check if GitHub workflow triggers are available

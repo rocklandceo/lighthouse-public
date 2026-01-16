@@ -147,7 +147,7 @@ Replace with your actual API Login and API Password.
 
 **Save the file** - you'll upload these to Vercel in Step 10 of the main README.
 
-> **📍 Regional Settings (Optional)**: By default, DataForSEO tracks USA/English search results. If you need to track different regions (UK, Germany, etc.), you can configure `DATAFORSEO_LOCATION_CODE` and `DATAFORSEO_LANGUAGE_CODE` in your environment variables. See the [Advanced Topics](#custom-location-and-language-codes) section for location codes and configuration details.
+> **📍 Regional Settings (Required)**: `DATAFORSEO_LOCATION_CODE` and `DATAFORSEO_LANGUAGE_CODE` are required configuration values. Use the defaults shown in `.env.example` or set values for your target region and language. See the [Advanced Topics](#custom-location-and-language-codes) section for location codes and configuration details.
 
 ---
 
@@ -407,7 +407,7 @@ DataForSEO supports 100+ locations. Common examples:
 
 ### How to Configure Custom Location/Language
 
-Add to your `.env` file (or Vercel environment variables):
+Add to your `.env` file (and Vercel environment variables):
 
 ```bash
 # Default: USA, English

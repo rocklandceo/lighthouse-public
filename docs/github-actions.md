@@ -153,16 +153,17 @@ In addition to `CI_UPLOAD_SIGNING_KEY`, add these required secrets:
 
 **⚠️ Important**: `TARGET_BASE_URL` must also be set in Vercel environment variables with the **exact same value**. This is required for the dashboard to work correctly.
 
-### SITEMAP_URL (Optional)
+### SITEMAP_URL (Conditionally Required)
 
-Only add this if your sitemap is NOT at the standard location (`/sitemap.xml`):
+Add this secret if your sitemap is NOT at the standard location (`/sitemap.xml`):
 
 1. Click **New repository secret**
 2. Name: `SITEMAP_URL`
 3. Value: Full URL to your sitemap (e.g., `https://your-website.com/sitemap_index.xml`)
 4. Click **Add secret**
 
-**Default behavior**: If `SITEMAP_URL` is not set, the workflow will look for `${TARGET_BASE_URL}/sitemap.xml`
+**Default behavior**: If `SITEMAP_URL` is not set, the workflow will look for `${TARGET_BASE_URL}/sitemap.xml`.
+If your sitemap lives elsewhere, `SITEMAP_URL` is required for URL generation to succeed.
 
 ---
 
@@ -173,7 +174,7 @@ Only add this if your sitemap is NOT at the standard location (`/sitemap.xml`):
 | `DASHBOARD_URL` | ✅ Yes | `https://my-dashboard.vercel.app` | Nowhere else |
 | `CI_UPLOAD_SIGNING_KEY` | ✅ Yes | `a1b2c3d4e5...` (64 chars) | **Vercel env vars** (must match!) |
 | `TARGET_BASE_URL` | ✅ Yes | `https://example.com` | **Vercel env vars** (must match!) |
-| `SITEMAP_URL` | ⚪ Optional | `https://example.com/sitemap_index.xml` | Nowhere else |
+| `SITEMAP_URL` | ⚪ Conditional | `https://example.com/sitemap_index.xml` | Nowhere else |
 
 **Critical**: `CI_UPLOAD_SIGNING_KEY` and `TARGET_BASE_URL` must be set in **TWO** places with identical values:
 1. GitHub repository secrets (for the CI workflow)

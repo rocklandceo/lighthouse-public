@@ -2,7 +2,7 @@
 
 ## When to Use This Guide
 
-**From the main README**: You're here from Step 10 of the main setup guide.
+**From the main README**: You're here from Step 11 of the main setup guide.
 
 **Purpose**: This guide provides detailed walkthrough for Google Analytics 4 and Search Console setup, including account creation. The README has a quick summary - this guide has the full details.
 

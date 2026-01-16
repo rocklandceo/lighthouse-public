@@ -10,24 +10,19 @@ export { isAnalyticsEnabled };
 // Get service account credentials from either JSON or separate env vars
 function getServiceAccountCredentials() {
   const config = getConfig();
+  let json: { client_email?: string; private_key?: string };
 
-  // Option 1: Full JSON object in GOOGLE_SERVICE_ACCOUNT_JSON
-  if (config.analytics.serviceAccountJson) {
-    try {
-      const json = JSON.parse(config.analytics.serviceAccountJson);
-      return {
-        client_email: json.client_email,
-        private_key: json.private_key,
-      };
-    } catch (e) {
-      console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:', e);
-    }
+  // Full JSON object in GOOGLE_SERVICE_ACCOUNT_JSON
+  try {
+    json = JSON.parse(config.analytics.serviceAccountJson);
+  } catch (e) {
+    console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:', e);
+    throw new Error('Invalid GOOGLE_SERVICE_ACCOUNT_JSON');
   }
 
-  // Option 2: Separate environment variables
   return {
-    client_email: config.analytics.serviceAccountEmail,
-    private_key: config.analytics.serviceAccountPrivateKey?.replace(/\\n/g, '\n'),
+    client_email: json.client_email,
+    private_key: json.private_key,
   };
 }
 

@@ -65,6 +65,26 @@ All features are included for this cost. No hidden fees or surprise charges.
 
 ---
 
+## Clean-Room Setup (Beginner Friendly)
+
+Use this path when you want a fresh, zero‑context setup from a clean clone. It focuses on the required integrations and the exact order of actions so you can validate and deploy without guessing. Follow the full step‑by‑step guide in [`docs/clean-room.md`](docs/clean-room.md:1).
+
+**Clean‑room phases (short checklist):**
+- [ ] Clone + install dependencies → verify local run
+- [ ] Fill `.env` with all required values → run validation
+- [ ] Deploy to Vercel + add KV → set env vars + redeploy
+- [ ] Configure GitHub Actions secrets → run first scan → confirm data
+
+**Required environment variables (complete setup):**
+
+**Local/Vercel runtime**
+`TARGET_BASE_URL`, `TARGET_DOMAIN`, `DASHBOARD_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `ANTHROPIC_API_KEY`, `AI_MODEL`, `DATAFORSEO_LOGIN`, `DATAFORSEO_PASSWORD`, `DATAFORSEO_LOCATION_CODE`, `DATAFORSEO_LANGUAGE_CODE`, `GOOGLE_ANALYTICS_PROPERTY_ID`, `GOOGLE_SERVICE_ACCOUNT_JSON`
+
+**GitHub Actions secrets**
+`CI_UPLOAD_SIGNING_KEY`, `TARGET_BASE_URL`, `DASHBOARD_URL`, and `SITEMAP_URL` only if your sitemap is not at `/sitemap.xml`.
+
+**Important**: CI uploads use `CI_UPLOAD_SIGNING_KEY` (signing key auth only). There is no legacy bearer‑token mode.
+
 ### What You'll Configure
 
 During setup, you'll create and add these to your `.env` file:
@@ -76,8 +96,13 @@ During setup, you'll create and add these to your `.env` file:
 | `GOOGLE_CLIENT_ID` | Google Cloud | `123456.apps.googleusercontent.com` |
 | `GOOGLE_CLIENT_SECRET` | Google Cloud | `GOCSPX-...` |
 | `ANTHROPIC_API_KEY` | Anthropic Console | `sk-ant-api03-...` |
+| `AI_MODEL` | Anthropic (model name) | Set to the required model in `.env.example` |
 | `DATAFORSEO_LOGIN` | DataForSEO | Your email |
 | `DATAFORSEO_PASSWORD` | DataForSEO | API password |
+| `DATAFORSEO_LOCATION_CODE` | DataForSEO | Location code for SERP tracking |
+| `DATAFORSEO_LANGUAGE_CODE` | DataForSEO | Language code for SERP tracking |
+| `GOOGLE_ANALYTICS_PROPERTY_ID` | Google Analytics | `properties/123456789` |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | Google Cloud | Service account JSON (single line) |
 
 Keep your `.env` file open throughout setup - you'll add each credential as you create it.
 
@@ -456,8 +481,6 @@ A GitHub account is required for:
 
 **Detailed guide**: [docs/anthropic.md](docs/anthropic.md)
 
-**Skip if**: You only want basic Lighthouse scores without AI analysis
-
 <details>
 <summary><strong>Don't have an Anthropic account? Click here for step-by-step instructions</strong></summary>
 
@@ -542,6 +565,7 @@ An Anthropic account is required for:
 
 ```bash
 ANTHROPIC_API_KEY=sk-ant-________________________
+AI_MODEL=<required-model-from-.env.example>
 ```
 
 Save the file (Ctrl+S / Cmd+S).
@@ -559,13 +583,11 @@ Save the file (Ctrl+S / Cmd+S).
 
 ---
 
-#### Step 5: DataForSEO Account (Optional - $50 deposit)
+#### Step 5: DataForSEO Account (Required - $50 deposit)
 
 **Why needed**: Competitor analysis and SERP tracking
 
 **Cost**: $50 minimum deposit (lasts 2-6 months)
-
-**Skip if**: You don't need competitor analysis (dashboard still works)
 
 **Why DataForSEO?** DataForSEO was chosen for this dashboard because:
 
@@ -601,6 +623,8 @@ Save the file (Ctrl+S / Cmd+S).
 ```bash
 DATAFORSEO_LOGIN=your-email@example.com
 DATAFORSEO_PASSWORD=________________________
+DATAFORSEO_LOCATION_CODE=<required-location-code>
+DATAFORSEO_LANGUAGE_CODE=<required-language-code>
 ```
 
 Save the file (Ctrl+S / Cmd+S).
@@ -715,7 +739,7 @@ That's it! Vercel account is ready.
 
 - [ ] Verified Google Analytics 4 setup
 - [ ] Noted Property ID
-- [ ] (Optional) Completed detailed setup from guide
+- [ ] Completed detailed setup from guide
 
 ✅ **Checkpoint**: All 7 accounts created
 
@@ -745,6 +769,7 @@ Add your website's information to `.env`.
 # Target Site
 TARGET_BASE_URL=https://your-website.com
 TARGET_DOMAIN=your-website.com
+SITEMAP_URL=https://your-website.com/sitemap.xml
 ```
 
 Replace with your actual website URL.
@@ -755,6 +780,7 @@ Save the file (Ctrl+S / Cmd+S).
 
 - [ ] Added `TARGET_BASE_URL` to `.env`
 - [ ] Added `TARGET_DOMAIN` to `.env`
+- [ ] Added `SITEMAP_URL` to `.env` (required if your sitemap is not at `/sitemap.xml`)
 - [ ] Saved `.env` file
 
 ✅ **Checkpoint**: Target site configured in .env
@@ -940,13 +966,11 @@ You'll come back to update the OAuth redirect URI in Step 15 (after Vercel deplo
 
 ---
 
-#### Step 11: Set Up Google Analytics + Search Console (Optional)
+#### Step 11: Set Up Google Analytics + Search Console (Required)
 
 **Why needed**: Fetch traffic metrics and search performance data
 
 **Cost**: Free
-
-**Skip if**: You don't need analytics integration (dashboard still works)
 
 **Detailed guide**: [docs/google-analytics.md](docs/google-analytics.md)
 
@@ -1191,16 +1215,17 @@ Before continuing, verify these critical items:
 - [ ] `CI_UPLOAD_SIGNING_KEY` - Generated key (64 chars) ← **Save this separately - you'll need it twice**
 - [ ] `GOOGLE_CLIENT_ID` - From Google Cloud
 - [ ] `GOOGLE_CLIENT_SECRET` - From Google Cloud
-
-**For core features (dashboard's value)**:
-
 - [ ] `ANTHROPIC_API_KEY` - For AI insights
-- [ ] `DATAFORSEO_LOGIN` + `DATAFORSEO_PASSWORD` - For competitor tracking
-
-**For analytics (optional but recommended)**:
-
+- [ ] `AI_MODEL` - Anthropic model name
+- [ ] `DATAFORSEO_LOGIN` + `DATAFORSEO_PASSWORD` - Competitor tracking credentials
+- [ ] `DATAFORSEO_LOCATION_CODE` - Location code for SERP tracking
+- [ ] `DATAFORSEO_LANGUAGE_CODE` - Language code for SERP tracking
 - [ ] `GOOGLE_ANALYTICS_PROPERTY_ID` - Format: `properties/123456789`
 - [ ] `GOOGLE_SERVICE_ACCOUNT_JSON` - Full JSON on single line
+
+**Sitemap note**:
+
+- [ ] If your sitemap is not at `/sitemap.xml`, set `SITEMAP_URL` in `.env` and in GitHub Secrets
 
 Run `npm run setup:validate` to verify all required variables are set correctly.
 
@@ -1314,8 +1339,11 @@ Add **all** your environment variables to Vercel.
 | `GOOGLE_ANALYTICS_PROPERTY_ID` | From .env | Analytics property |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | From .env | Full JSON object |
 | `ANTHROPIC_API_KEY` | From .env | AI insights |
+| `AI_MODEL` | From .env | Anthropic model name |
 | `DATAFORSEO_LOGIN` | From .env | Competitor analysis |
 | `DATAFORSEO_PASSWORD` | From .env | Competitor analysis |
+| `DATAFORSEO_LOCATION_CODE` | From .env | Competitor analysis location |
+| `DATAFORSEO_LANGUAGE_CODE` | From .env | Competitor analysis language |
 
 3. For each variable:
    - Name: Exact variable name
@@ -1327,6 +1355,7 @@ Add **all** your environment variables to Vercel.
 - `APP_NAME` - Custom dashboard name
 - `SITE_DESCRIPTION` - Your site description for AI context
 - `SLACK_WEBHOOK_URL` - Slack notifications
+- `SITEMAP_URL` - Only if your sitemap is not at `/sitemap.xml`
 
 > **⚠️ CRITICAL: Copy from Vercel, Not Your Notes**
 >
@@ -1438,6 +1467,7 @@ If they don't match exactly, you'll get 401 Unauthorized errors (the #1 setup fa
 | `CI_UPLOAD_SIGNING_KEY` | From Vercel env vars | ✅ YES - Copy exact value |
 | `TARGET_BASE_URL` | From Vercel env vars | ✅ YES - Copy exact value |
 | `DASHBOARD_URL` | From Vercel env vars | No (but still add it) |
+| `SITEMAP_URL` | Full sitemap URL (if not at `/sitemap.xml`) | No (only if needed) |
 
 **How to ensure exact match**:
 1. Open Vercel → Settings → Environment Variables
@@ -1923,10 +1953,10 @@ This is the #1 setup failure - ensure values match exactly.
 1. Edit configuration files:
    - `unlighthouse-mobile.config.ts`
    - `unlighthouse-desktop.config.ts`
-2. Reduce `scanner.maxRoutes` from 50 to 20:
+2. Reduce `scanner.maxRoutes` from 100 to 20:
    ```typescript
    scanner: {
-     maxRoutes: 20,  // Reduced from 50
+      maxRoutes: 20,  // Reduced from 100
    }
    ```
 3. Commit and push changes

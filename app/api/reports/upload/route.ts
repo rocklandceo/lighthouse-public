@@ -9,7 +9,7 @@ import {
   type LatestReportData,
   type StoredReportRun,
 } from '@/lib/cache';
-import { getConfig, isSecureUploadEnabled, isLegacyUploadEnabled } from '@/lib/config';
+import { getConfig, isSecureUploadEnabled } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +40,7 @@ const FORBIDDEN_FIELD_PATTERNS = [
 interface AuthResult {
   success: boolean;
   error?: string;
-  method?: 'hmac' | 'bearer';
+  method?: 'hmac';
 }
 
 /**
@@ -55,8 +55,8 @@ async function verifyHmacSignature(
   request: NextRequest,
   bodyString: string
 ): Promise<AuthResult> {
-  const config = getConfig();
-  const signingKey = config.ci.uploadSigningKey;
+  const { ci } = getConfig();
+  const signingKey = ci.uploadSigningKey;
 
   if (!signingKey) {
     return { success: false, error: 'HMAC signing not configured' };
@@ -122,52 +122,13 @@ async function verifyHmacSignature(
 }
 
 /**
- * Verify legacy Bearer token authentication
- * @deprecated Use HMAC signature authentication instead
- */
-function verifyBearerToken(request: NextRequest): AuthResult {
-  const config = getConfig();
-  const expectedSecret = config.ci.uploadSecret;
-
-  if (!expectedSecret) {
-    return { success: false, error: 'Bearer token auth not configured' };
-  }
-
-  const authHeader = request.headers.get('Authorization');
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return { success: false, error: 'Missing or invalid Authorization header' };
-  }
-
-  const providedSecret = authHeader.slice(7);
-
-  // Timing-safe comparison for the secret
-  try {
-    const providedBuffer = Buffer.from(providedSecret);
-    const expectedBuffer = Buffer.from(expectedSecret);
-
-    if (providedBuffer.length !== expectedBuffer.length) {
-      return { success: false, error: 'Invalid bearer token' };
-    }
-
-    if (!timingSafeEqual(providedBuffer, expectedBuffer)) {
-      return { success: false, error: 'Invalid bearer token' };
-    }
-  } catch {
-    return { success: false, error: 'Invalid bearer token' };
-  }
-
-  return { success: true, method: 'bearer' };
-}
-
-/**
  * Authenticate the request using available methods
  */
 async function authenticate(
   request: NextRequest,
   bodyString: string
 ): Promise<AuthResult> {
-  // Prefer HMAC signature if configured
+  // Require HMAC signature authentication
   if (isSecureUploadEnabled()) {
     const hmacResult = await verifyHmacSignature(request, bodyString);
     if (hmacResult.success) {
@@ -177,21 +138,12 @@ async function authenticate(
     return hmacResult;
   }
 
-  // Fall back to legacy Bearer token if HMAC not configured
-  if (isLegacyUploadEnabled()) {
-    console.warn(
-      '⚠️  Using legacy Bearer token authentication. ' +
-        'Consider upgrading to HMAC signatures by setting CI_UPLOAD_SIGNING_KEY.'
-    );
-    return verifyBearerToken(request);
-  }
-
-  return {
-    success: false,
-    error:
-      'No authentication method configured. ' +
-      'Set CI_UPLOAD_SIGNING_KEY (recommended) or CI_UPLOAD_SECRET.',
-  };
+    return {
+      success: false,
+      error:
+        'No authentication method configured. ' +
+        'Set CI_UPLOAD_SIGNING_KEY for CI uploads.',
+    };
 }
 
 /**
@@ -267,17 +219,13 @@ function getClientIP(request: NextRequest): string {
  *
  * Upload Lighthouse report data from CI.
  *
- * Authentication (in order of preference):
+ * Authentication:
  *
- * 1. HMAC Signature (recommended):
+ * 1. HMAC Signature (required):
  *    Headers:
  *      X-Timestamp: Unix timestamp in seconds
  *      X-Nonce: Random UUID
  *      X-Signature: HMAC-SHA256(timestamp.nonce.sha256(body), CI_UPLOAD_SIGNING_KEY)
- *
- * 2. Bearer Token (legacy, deprecated):
- *    Headers:
- *      Authorization: Bearer <CI_UPLOAD_SECRET>
  *
  * Request body:
  * {
