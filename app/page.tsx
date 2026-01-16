@@ -309,7 +309,7 @@ export default function Dashboard() {
   const runScan = async () => {
     setScanning(true);
     try {
-      const res = await fetch('/api/scan', { method: 'POST' });
+      const res = await fetch('/api/trigger-scan', { method: 'POST' });
       if (res.ok) {
         await fetchAllData();
       }

@@ -34,7 +34,7 @@ export async function POST(_request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          event_type: 'manual_scan',
+          event_type: 'manual-scan',
         }),
       }
     );
